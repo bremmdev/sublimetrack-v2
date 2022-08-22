@@ -1,0 +1,43 @@
+.date-message {
+  font-size: 1.5rem;
+  margin-top: 1em;
+  font-weight: 700;
+}
+
+.summary-card {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.summary-card > div {
+  border-left: 2px solid var(--text-color);
+  padding: 0 2em;
+}
+.summary-card > div:first-of-type {
+  border-left: none;
+  padding-left: 0;
+}
+
+.large-text {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+@media(max-width: 1400px){
+  .summary-card > div {
+    padding:0 1.5em;
+  }
+}
+
+@media(max-width:960px){
+  .large-text{
+    font-size:1.3rem;
+  } 
+}
+
+@media(max-width:560px){
+
+  .summary-card > div {
+    padding:0 1em;
+  }
+}
