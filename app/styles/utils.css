@@ -77,12 +77,12 @@
 
 @media (max-width: 960px) {
   .p-5 {
-    padding: 5em 2em;
+    padding: 5em 3em;
   }
 }
 
 @media (max-width: 560px) {
   .p-5 {
-    padding: 4em 1.5em;
+    padding: 4em 2em;
   }
 }

@@ -1,23 +1,17 @@
-.expenses-list {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
 .expenses-list li {
   display: flex;
-  justify-content: space-evenly;
+  position: relative;
+  justify-content: space-between;
   align-items: center;
   border-top: 1px solid var(--text-color);
 }
 
 .category-indicator {
-  position: relative;
-  left: -0.75em;
+  position: absolute;
+  left: -2em;
   height: 1rem;
   width: 1rem;
   border-radius: 50%;
-  margin: 0;
 }
 
 .expenses-list li:first-child {
@@ -38,7 +32,9 @@
 
 .expense-date {
   text-align: left;
-  flex-basis: 20%;
+  justify-self: flex-start;
+  flex-basis: 9rem;
+  flex-grow: 0;
 }
 
 .expense-amount {
@@ -60,12 +56,12 @@
   transition: transform 0.3s;
 }
 
-@media (max-width: 600px) {
-  .expense-date {
-    flex-basis: 30%;
-  }
-
+@media (max-width: 560px) {
   .expense-title-cat {
     flex-basis: 50%;
+  }
+
+  .category-indicator {
+    display: none;
   }
 }

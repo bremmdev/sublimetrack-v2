@@ -1,16 +1,19 @@
-import type { ExpenseWithCategory } from '~/models/expense.server'
+import type { ExpenseWithCategory } from "~/models/expense.server";
 
 type Props = {
-  expense: ExpenseWithCategory
-}
-
+  expense: ExpenseWithCategory;
+};
 
 const ExpenseItem = (props: Props) => {
 
+  const categoryIndicatorStyles = {
+    backgroundColor: props.expense.Category.color
+  }
 
   return (
     <>
       <li>
+        <span className="category-indicator" style={categoryIndicatorStyles}></span>
         <div className="expense-date">
           {new Date(props.expense.date).toLocaleDateString("en-US", {
             day: "2-digit",

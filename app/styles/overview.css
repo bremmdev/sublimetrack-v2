@@ -23,21 +23,20 @@
   font-weight: 700;
 }
 
-@media(max-width: 1400px){
+@media (max-width: 1400px) {
   .summary-card > div {
-    padding:0 1.5em;
+    padding: 0 1.5em;
   }
 }
 
-@media(max-width:960px){
-  .large-text{
-    font-size:1.3rem;
-  } 
+@media (max-width: 960px) {
+  .large-text {
+    font-size: 1.3rem;
+  }
 }
 
-@media(max-width:560px){
-
+@media (max-width: 560px) {
   .summary-card > div {
-    padding:0 1em;
+    padding: 0 1em;
   }
 }

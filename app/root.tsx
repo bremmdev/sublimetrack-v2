@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import React from "react";
 import {
   Links,
@@ -20,7 +20,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-export const links = () => [
+export const links: LinksFunction = () => [
   { href: globalStyles, rel: "stylesheet" },
   { href: utilStyles, rel: "stylesheet" },
 ];
@@ -70,6 +70,34 @@ function Layout({ children }: Props) {
 function NavPanel() {
   const activeClassName = "active-navlink";
 
+  const navLinks = [
+    {
+      to: "/",
+      icon: <FiMonitor className="nav-icon" />,
+      text: "Overview",
+    },
+    {
+      to: "/budgets",
+      icon: <IoWalletOutline className="nav-icon" />,
+      text: "Budgets",
+    },
+    {
+      to: "/expenses",
+      icon: <MdViewList className="nav-icon" />,
+      text: "Expenses",
+    },
+    {
+      to: "/categories",
+      icon: <MdOutlineWindow className="nav-icon" />,
+      text: "Categories",
+    },
+    {
+      to: "/insights",
+      icon: <IoStatsChart className="nav-icon" />,
+      text: "Insights",
+    },
+  ];
+
   return (
     <div className="nav-panel flex-column align-center py-3">
       <div className="logo-container flex-column align-center">
@@ -80,66 +108,20 @@ function NavPanel() {
       </div>
       <nav className="nav my-2">
         <ul>
-          <li className="my-1">
-            <NavLink
-              to="/"
-              prefetch="intent"
-              className={({ isActive }) =>
-                isActive ? activeClassName : undefined
-              }
-            >
-              <FiMonitor className="nav-icon" />
-              <span className="hidden-mobile">Overview</span>
-            </NavLink>
-          </li>
-          <li className="my-1">
-            <NavLink
-              to="/budgets"
-              prefetch="intent"
-              className={({ isActive }) =>
-                isActive ? activeClassName : undefined
-              }
-            >
-              <IoWalletOutline className="nav-icon" />
-              <span className="hidden-mobile">Budgets</span>
-            </NavLink>
-          </li>
-          <li className="my-1">
-            <NavLink
-              to="/expenses"
-              prefetch="intent"
-              className={({ isActive }) =>
-                isActive ? activeClassName : undefined
-              }
-            >
-              <MdViewList className="nav-icon" />
-              <span className="hidden-mobile">Expenses</span>
-            </NavLink>
-          </li>
-          <li className="my-1">
-            <NavLink
-              to="/categories"
-              prefetch="intent"
-              className={({ isActive }) =>
-                isActive ? activeClassName : undefined
-              }
-            >
-              <MdOutlineWindow className="nav-icon" />
-              <span className="hidden-mobile">Categories</span>
-            </NavLink>
-          </li>
-          <li className="my-1">
-            <NavLink
-              to="/insights"
-              prefetch="intent"
-              className={({ isActive }) =>
-                isActive ? activeClassName : undefined
-              }
-            >
-              <IoStatsChart className="nav-icon" />
-              <span className="hidden-mobile">Insights</span>
-            </NavLink>
-          </li>
+          {navLinks.map((link) => (
+            <li className="my-1" key={link.text}>
+              <NavLink
+                to={link.to}
+                prefetch="intent"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
+                {link.icon}
+                <span className="hidden-mobile">{link.text}</span>
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>

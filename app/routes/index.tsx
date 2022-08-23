@@ -122,7 +122,7 @@ export default function IndexRoute() {
           expenseAmount={expenseAmount}
         />
 
-        <section className="expenses-list">
+        <section className="expenses-list flex-column">
           <h3>Latest expenses</h3>
           {latestExpensesContent}
           <Link
