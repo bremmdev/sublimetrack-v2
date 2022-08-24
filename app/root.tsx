@@ -52,7 +52,7 @@ function Document({ children }: Props) {
         {children}
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+        {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>
   );
