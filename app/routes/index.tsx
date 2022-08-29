@@ -72,12 +72,12 @@ export default function IndexRoute() {
   let latestExpensesContent: React.ReactElement = <p>Loading...</p>;
 
   if (latestExpenses.length === 0) {
-    latestExpensesContent = <p>There are currently no expenses.</p>;
+    latestExpensesContent = <p className="my-1">There are currently no expenses.</p>;
   }
 
   if (latestExpenses && latestExpenses.length > 0) {
     latestExpensesContent = (
-      <ul>
+      <ul className="my-1">
         {latestExpenses.map((expense) => (
           <ExpenseItem expense={expense} key={expense.id} />
         ))}
@@ -133,7 +133,9 @@ export default function IndexRoute() {
             All Expenses
           </Link>
         </section>
-        <section className="flex justify-center">Expenses per category doughnutchart</section>
+        <section className="flex justify-center">
+          Expenses per category doughnutchart
+        </section>
       </div>
     </>
   );

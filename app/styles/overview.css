@@ -29,14 +29,11 @@
   }
 }
 
-@media (max-width: 960px) {
-  .large-text {
-    font-size: 1.3rem;
-  }
-}
-
 @media (max-width: 560px) {
   .summary-card > div {
-    padding: 0 1em;
+    padding: 0 0.8em;
+  }
+  .large-text {
+    font-size: 1.25rem;
   }
 }

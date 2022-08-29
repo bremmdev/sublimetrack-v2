@@ -6,6 +6,15 @@
   border-top: 1px solid var(--text-color);
 }
 
+.expenses-list .hidden{
+  display:none;
+}
+
+/* optimistic UI: when hiding the top item the second item in the list should have no border*/
+.expenses-list .hidden:first-child + li{
+  border-top: none;
+} 
+
 .category-indicator {
   position: absolute;
   left: -2em;
@@ -33,7 +42,7 @@
 .expense-date {
   text-align: left;
   justify-self: flex-start;
-  flex-basis: 9rem;
+  flex-basis: 8rem;
   flex-grow: 0;
 }
 
@@ -46,7 +55,7 @@
 
 .delete-exp-icon {
   color: var(--error-crl);
-  margin-left: 0.85em;
+  margin-left: 0.5em;
   font-size: 1.5rem;
   transform: scale(1);
 }
@@ -59,9 +68,5 @@
 @media (max-width: 560px) {
   .expense-title-cat {
     flex-basis: 50%;
-  }
-
-  .category-indicator {
-    display: none;
   }
 }

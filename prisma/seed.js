@@ -10,13 +10,13 @@ async function clearDabatase() {
 }
 
 async function seed() {
-  await createCategories();
-  await createUsers();
-  await createBudgets();
+  // await createCategories();
+  // await createUsers();
+  // await createBudgets();
   await createExpenses();
 }
 
-clearDabatase();
+//clearDabatase();
 setTimeout(() => {
   seed();
 }, 1000)
@@ -149,7 +149,7 @@ async function createExpenses() {
         id: uuidv4(),
         title: "Health Insurance Company",
         amount: 125,
-        date: new Date("2022-08-7"),
+        date: new Date("2022-08-07"),
         userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3",
         categoryId: "3fdb010d-547d-451f-856a-0e0d3e207462",
       },
