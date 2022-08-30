@@ -1,4 +1,4 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction, ErrorBoundaryComponent } from "@remix-run/node";
 import React from "react";
 import {
   Links,
@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
   NavLink,
+  useCatch,
 } from "@remix-run/react";
 import { FiMonitor } from "react-icons/fi";
 import { IoStatsChart, IoWalletOutline } from "react-icons/io5";
@@ -123,5 +124,30 @@ function NavPanel() {
         </ul>
       </nav>
     </div>
+  );
+}
+
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  return (
+    <Document>
+      <Layout>
+        <h1>Oops...something went wrong</h1>
+        <p className="error-boundary-msg">{error.message}</p>
+      </Layout>
+    </Document>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  const errorMessage = caught.data ? JSON.stringify(caught.data, null, 2).replace(/['"]/gi, '') : `${caught.status}: ${caught.statusText}`
+
+  return (
+    <Document>
+      <Layout>
+        <h1>Oops...something went wrong</h1>
+        <p className="error-boundary-msg">{errorMessage}</p>
+      </Layout>
+    </Document>
   );
 }

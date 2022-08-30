@@ -45,6 +45,17 @@
  width:100%; 
 }
 
+/* OTHER */
+
+.error {
+  color: var(--error-crl);
+  font-weight: bold;
+  margin-bottom:1em;
+}
+
+.centered{
+  text-align: center;
+}
 
 /* MARGINS AND PADDINGS */
 

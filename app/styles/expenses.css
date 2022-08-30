@@ -6,14 +6,25 @@
   border-top: 1px solid var(--text-color);
 }
 
-.expenses-list .hidden{
-  display:none;
+.expenses-list .hidden {
+  display: none;
+  border: none;
 }
 
-/* optimistic UI: when hiding the top item the second item in the list should have no border*/
-.expenses-list .hidden:first-child + li{
+/* styles the first visible item if it is the first child */
+/* and will style the first visible item following a hidden item */
+/* needed for optimistic UI deletions */
+
+.expenses-list li:not(.hidden):first-child,
+.expenses-list li.hidden + li:not(.hidden) {
   border-top: none;
-} 
+}
+
+/* these will reset all following visible items to original style*/
+.expenses-list li:not(.hidden):first-child ~ li,
+.expenses-list li.hidden + li:not(.hidden) ~ li {
+  border-top: 1px solid var(--text-color);
+}
 
 .category-indicator {
   position: absolute;
@@ -21,10 +32,6 @@
   height: 1rem;
   width: 1rem;
   border-radius: 50%;
-}
-
-.expenses-list li:first-child {
-  border-top: none;
 }
 
 .expenses-list li > div {
@@ -42,7 +49,7 @@
 .expense-date {
   text-align: left;
   justify-self: flex-start;
-  flex-basis: 8rem;
+  flex-basis: 10rem;
   flex-grow: 0;
 }
 
@@ -68,5 +75,9 @@
 @media (max-width: 560px) {
   .expense-title-cat {
     flex-basis: 50%;
+  }
+
+  .expense-date {
+    flex-basis: 8rem;
   }
 }

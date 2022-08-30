@@ -29,7 +29,15 @@ export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData();
   const expenseId = formData.get("expense_id");
   invariant(typeof expenseId === "string", "Expense not found!");
-  await deleteExpense(expenseId);
+
+  try {
+    const deletedExpense = await deleteExpense(expenseId);
+    if (!deletedExpense) {
+      throw new Error(`Deleting expense ${expenseId} failed`);
+    }
+  } catch (e) {
+    return json({ error: "Deleting expense failed" });
+  }
   return null;
 };
 
@@ -42,7 +50,6 @@ export const loader: LoaderFunction = async () => {
 
 export default function ExpensesRoute() {
   const { expenses } = useLoaderData() as unknown as LoaderData;
-  // console.log(expenses)
 
   let expensesContent;
 

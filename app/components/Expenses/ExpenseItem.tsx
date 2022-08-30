@@ -17,6 +17,10 @@ const ExpenseItem = (props: Props) => {
     fetcher.submission &&
     fetcher.submission.formData.get("expense_id") === expense.id;
 
+  console.log(fetcher.data?.error);
+
+  const isFailedDeletion = fetcher.data?.error;
+
   const categoryIndicatorStyles = {
     backgroundColor: expense.Category.color,
   };
@@ -59,6 +63,7 @@ const ExpenseItem = (props: Props) => {
           </fetcher.Form>
         )}
       </li>
+      {isFailedDeletion && <div className="error centered">{fetcher.data?.error}</div>}
     </>
   );
 };
