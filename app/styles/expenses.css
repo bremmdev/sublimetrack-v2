@@ -1,3 +1,54 @@
+/* EXPENESES HEADER */
+
+.expenses-header {
+  gap: 1em;
+}
+
+.expenses-header-filters {
+  justify-content: flex-end;
+  gap: 1em;
+}
+
+.datepicker,
+.filter-category,
+.search-field {
+  display: inline-block;
+  padding: 0.7em 1em;
+  border: none;
+  border-bottom: 2px solid #aaa;
+  outline: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border 0.25s ease-in 0s;
+  color: var(--text-color);
+  background-color: var(--primary-clr);
+  flex-basis: 33%;
+  max-width: 200px;
+  width: 0;
+}
+
+.datepicker:disabled,
+.filter-category:disabled,
+.search-field:disabled {
+  opacity: 0.3;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+}
+
+.datepicker:focus,
+.search-field:focus {
+  border-bottom: 2px solid var(--accent-clr);
+}
+
+.search-field::placeholder {
+  font-weight: 700;
+}
+
+/* EXPENSES LIST */
+
 .expenses-list li {
   display: flex;
   position: relative;
@@ -61,7 +112,7 @@
 /* DELETE BUTTON */
 
 .delete-exp-icon {
-  color: var(--error-crl);
+  color: var(--error-clr);
   margin-left: 0.5em;
   font-size: 1.5rem;
   transform: scale(1);
@@ -72,7 +123,19 @@
   transition: transform 0.3s;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 600px) {
+  .expenses-header-filters {
+    flex-direction: column;
+  }
+
+  .datepicker,
+  .filter-category,
+  .search-field {
+    flex-basis: 100%;
+    max-width: initial;
+    width: initial;
+  }
+
   .expense-title-cat {
     flex-basis: 50%;
   }

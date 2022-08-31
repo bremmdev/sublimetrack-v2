@@ -17,8 +17,6 @@ const ExpenseItem = (props: Props) => {
     fetcher.submission &&
     fetcher.submission.formData.get("expense_id") === expense.id;
 
-  console.log(fetcher.data?.error);
-
   const isFailedDeletion = fetcher.data?.error;
 
   const categoryIndicatorStyles = {

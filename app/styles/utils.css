@@ -39,21 +39,21 @@
 
 /* CONTAINER */
 
-.container-constrained{
- max-width: 1000px;
- margin: 0 auto;
- width:100%; 
+.container-constrained {
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* OTHER */
 
 .error {
-  color: var(--error-crl);
+  color: var(--error-clr);
   font-weight: bold;
-  margin-bottom:1em;
+  margin-bottom: 1em;
 }
 
-.centered{
+.centered {
   text-align: center;
 }
 

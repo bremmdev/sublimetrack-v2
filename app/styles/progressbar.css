@@ -11,7 +11,7 @@
 }
 
 .progressbar-spent{
-  background-color:var(--error-crl);
+  background-color:var(--error-clr);
   height:2rem;
   width:0;
 }

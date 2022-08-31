@@ -1,9 +1,11 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma, Expense } from "@prisma/client";
 import { prisma } from "~/db.server";
 
 export type ExpenseWithCategory = Prisma.ExpenseGetPayload<{
-  include: { Category: true }
-}>
+  include: { Category: true };
+}>;
+
+
 
 export async function getExpensesByUserId(userId: string) {
   return await prisma.expense.findMany({
@@ -24,12 +26,25 @@ export async function getExpensesByUserId(userId: string) {
   });
 }
 
+export async function createExpense(expenseObj: Expense) {
+  return await prisma.expense.create({
+    data: expenseObj
+  })
+}
+
+export async function deleteExpense(id: string) {
+  return await prisma.expense.delete({
+    where: {
+      id,
+    },
+  });
+}
+
 export function getExpensesForCurrentMonth(
   expenses: ExpenseWithCategory[],
   startOfMonth: Date,
   endOfMonth: Date
 ) {
- 
   const expensesCurrentMonth = expenses.filter(
     (expenses) => expenses.date >= startOfMonth && expenses.date < endOfMonth
   );
@@ -38,15 +53,5 @@ export function getExpensesForCurrentMonth(
     0
   );
 
-  // console.log(expensesCurrentMonth, expenseAmount)
-
   return { expensesCurrentMonth, expenseAmount };
-}
-
-export async function deleteExpense(id: string) {
-  return await prisma.expense.delete({
-    where: {
-      id
-    }
-  })
 }
