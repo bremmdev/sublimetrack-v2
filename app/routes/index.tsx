@@ -4,7 +4,7 @@ import { getUserById } from "~/models/user.server";
 import { getCurrDate } from "~/models/date.server";
 import { getCurrentBudget } from "~/models/budget.server";
 import {
-  getExpensesByUserId,
+  getExpenses,
   getExpensesForCurrentMonth,
   type ExpenseWithCategory,
 } from "~/models/expense.server";
@@ -41,11 +41,22 @@ export const loader: LoaderFunction = async () => {
   const { currDate, startOfMonth, endOfMonth } = getCurrDate();
 
   const currentBudget = getCurrentBudget(user.Budget, currDate);
-  const expenses = await getExpensesByUserId(user.id);
+
+  const expensesFilter = {
+    userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3",
+    date: {
+      gte: startOfMonth,
+    },
+  };
+
+  const expenses = await getExpenses(expensesFilter);
+
+  if(!expenses) {
+    throw new Response("Expenses not found", { status: 404})
+  }
 
   const { expensesCurrentMonth, expenseAmount } = getExpensesForCurrentMonth(
     expenses,
-    startOfMonth,
     endOfMonth
   );
 

@@ -5,13 +5,17 @@ export type ExpenseWithCategory = Prisma.ExpenseGetPayload<{
   include: { Category: true };
 }>;
 
+type ExpenseFilter = {
+  userId: string,
+  categoryId?: string,
+  date: {
+    gte: Date,
+  },
+};
 
-
-export async function getExpensesByUserId(userId: string) {
+export async function getExpenses(filter: ExpenseFilter) {
   return await prisma.expense.findMany({
-    where: {
-      userId,
-    },
+    where: filter,
     include: {
       Category: true,
     },
@@ -25,6 +29,7 @@ export async function getExpensesByUserId(userId: string) {
     ],
   });
 }
+
 
 export async function createExpense(expenseObj: Expense) {
   return await prisma.expense.create({
@@ -42,11 +47,10 @@ export async function deleteExpense(id: string) {
 
 export function getExpensesForCurrentMonth(
   expenses: ExpenseWithCategory[],
-  startOfMonth: Date,
   endOfMonth: Date
 ) {
   const expensesCurrentMonth = expenses.filter(
-    (expenses) => expenses.date >= startOfMonth && expenses.date < endOfMonth
+    (expenses) => expenses.date < endOfMonth
   );
   const expenseAmount = expensesCurrentMonth.reduce(
     (sum, expense) => sum + +expense.amount,

@@ -3,13 +3,13 @@ import {
   json,
   type LoaderFunction,
 } from "@remix-run/node";
-import { useLoaderData, Link } from "@remix-run/react";
+import { useLoaderData, Link, Form, useSubmit } from "@remix-run/react";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import expenseStyles from "~/styles/expenses.css";
 import {
   deleteExpense,
-  getExpensesByUserId,
+  getExpenses,
   createExpense,
   type ExpenseWithCategory,
 } from "~/models/expense.server";
@@ -17,7 +17,9 @@ import invariant from "tiny-invariant";
 import ExpenseItem from "~/components/Expenses/ExpenseItem";
 import { v4 as uuid } from "uuid";
 import { Prisma } from "@prisma/client";
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
+import { getCategories, type Category } from "~/models/category.server";
+import { getCurrDate } from "~/models/date.server";
 
 export const links = () => [
   { href: globalStyles, rel: "stylesheet" },
@@ -27,6 +29,15 @@ export const links = () => [
 
 type LoaderData = {
   expenses: ExpenseWithCategory[];
+  categories: Category[];
+  from: string | null;
+  cat: string | null;
+  today_minus_30: Date;
+};
+
+const validateDate = (from: string) => {
+  const fromDate = new Date(from);
+  return !isNaN(+fromDate);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -62,40 +73,69 @@ export const action: ActionFunction = async ({ request, params }) => {
   return null;
 };
 
-export const loader: LoaderFunction = async () => {
-  const expenses = await getExpensesByUserId(
-    "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
-  );
-  return json<LoaderData>({ expenses });
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const from = new URLSearchParams(url.search).get("from");
+  const cat = new URLSearchParams(url.search).get("category");
+
+  const { today_minus_30 } = getCurrDate();
+
+  //set startDate to 30 days ago if tthere is no date or its invalid
+  const startDate =
+    from && validateDate(from) ? new Date(from) : today_minus_30;
+
+  const categories = await getCategories();
+
+  if (!categories) {
+    throw new Response("Categories not found", { status: 404 });
+  }
+
+  const selectedCat = categories.find((category) => category.name === cat);
+
+  const expensesFilter = {
+    userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3",
+    categoryId: selectedCat?.id,
+    date: {
+      gte: startDate,
+    },
+  };
+
+  const expenses = await getExpenses(expensesFilter);
+
+  if (!expenses) {
+    throw new Response("Loading expenses failed", { status: 404 });
+  }
+
+  return json<LoaderData>({ expenses, categories, from, cat, today_minus_30 });
 };
 
 export default function ExpensesRoute() {
-  const { expenses } = useLoaderData() as unknown as LoaderData;
+  const { expenses, categories, from, cat, today_minus_30 } =
+    useLoaderData() as unknown as LoaderData;
 
   //state for expenses filtered on search
-  const [filteredExpenses, setFilteredExpenses] = useState(expenses);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
-  console.log(expenses);
+  const submit = useSubmit();
 
-  const filterExpensesOnSearch = () => {
-    const query = searchInputRef.current?.value ?? "";
-    const filteredExpenses = expenses.filter((expense) =>
-      expense.title.toLowerCase().includes(query?.toLowerCase())
+  const filterExpenses = (expenses: ExpenseWithCategory[], query: string) => {
+    if (query === "") return expenses;
+    return expenses.filter((exp) =>
+      exp.title.toLowerCase().includes(query?.toLowerCase())
     );
-    setFilteredExpenses(filteredExpenses);
   };
 
   let expensesContent;
 
   if (expenses.length === 0) {
-    expensesContent = <p className="my-1">There are currently no expenses.</p>;
+    expensesContent = <p className="my-2">There are currently no expenses.</p>;
   }
 
   if (expenses && expenses.length > 0) {
     expensesContent = (
       <ul className="my-1">
-        {filteredExpenses.map((expense) => (
+        {filterExpenses(expenses, searchQuery).map((expense) => (
           <ExpenseItem expense={expense} key={expense.id} deletable />
         ))}
       </ul>
@@ -116,14 +156,44 @@ export default function ExpensesRoute() {
           </Link>
         </div>
         <div className="expenses-header-filters flex">
-          <input type="date" className="datepicker" />
-          <input type="text" className="filter-category" />
+          <Form
+            action="/expenses"
+            className="filter-form flex"
+            onChange={(e) => submit(e.currentTarget, { replace: true })}
+          >
+            <input
+              type="date"
+              name="from"
+              className="datepicker"
+              defaultValue={
+                from && validateDate(from)
+                  ? from
+                  : today_minus_30.toLocaleString().split("T")[0]
+              }
+            />
+            <select
+              name="category"
+              className="filter-category"
+              defaultValue={cat ? cat : ""}
+            >
+              <option value="" style={{ color: "#666", fontWeight: "700" }}>
+                Select category
+              </option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </Form>
+
           <input
             type="text"
             placeholder="Search..."
             className="search-field"
             ref={searchInputRef}
-            onChange={filterExpensesOnSearch}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>

@@ -23,9 +23,19 @@
   transition: border 0.25s ease-in 0s;
   color: var(--text-color);
   background-color: var(--primary-clr);
-  flex-basis: 33%;
+  flex-basis: 50%;
   max-width: 200px;
   width: 0;
+}
+
+.search-field {
+  flex-basis: 33%;
+}
+
+.filter-form {
+  flex-basis: 67%;
+  justify-content: flex-end;
+  gap: 1em;
 }
 
 .datepicker:disabled,
@@ -124,7 +134,8 @@
 }
 
 @media (max-width: 600px) {
-  .expenses-header-filters {
+  .expenses-header-filters,
+  .filter-form {
     flex-direction: column;
   }
 
