@@ -1,0 +1,74 @@
+.form-wrapper {
+  width: 100%;
+  border: 1px solid #999;
+  padding: 2em 2em;
+  border-radius: 6px;
+  margin-top: 2em;
+}
+
+.form {
+  margin: 0 auto;
+  max-width: 500px;
+}
+
+.form-actions {
+  gap: 1em;
+  margin-top: 2em;
+}
+
+.form-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1em 0;
+}
+
+.form input,
+.form select {
+  color: inherit;
+  font-size: inherit;
+  border: 0;
+  background-color: var(--primary-clr);
+  outline: none;
+  border-bottom: 2px solid #aaa;
+  padding: 0.7em 1em;
+  flex-basis: 75%;
+}
+
+.form select {
+  border: none;
+}
+
+.form input:focus {
+  border-bottom: 2px solid var(--accent-clr);
+}
+
+.form .error {
+  margin-left: 25%;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.form-control label {
+  flex-basis: 25%;
+  font-weight: 700;
+}
+
+@media (max-width: 560px) {
+  .form-wrapper {
+    padding: 1em;
+    margin: 1em 0;
+  }
+
+  .form input,
+  .form select {
+    max-width: 70%;
+    margin-left:1em;
+  }
+
+  .form .error {
+    margin-left: 30%;
+  }
+}

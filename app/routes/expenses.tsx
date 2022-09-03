@@ -3,7 +3,14 @@ import {
   json,
   type LoaderFunction,
 } from "@remix-run/node";
-import { useLoaderData, Link, Form, useSubmit } from "@remix-run/react";
+import {
+  useLoaderData,
+  Link,
+  Form,
+  useSubmit,
+  Outlet,
+  useLocation,
+} from "@remix-run/react";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import expenseStyles from "~/styles/expenses.css";
@@ -43,6 +50,7 @@ const validateDate = (from: string) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData();
   const action = formData.get("_action");
+  console.log('jaaa', action)
 
   if (action === "create") {
     const expense = {
@@ -118,6 +126,7 @@ export default function ExpensesRoute() {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const submit = useSubmit();
+  const location = useLocation();
 
   const filterExpenses = (expenses: ExpenseWithCategory[], query: string) => {
     if (query === "") return expenses;
@@ -148,7 +157,7 @@ export default function ExpensesRoute() {
         <div className="expenses-header-inner flex">
           <h2>Expenses</h2>
           <Link
-            to="/new"
+            to="new"
             prefetch="intent"
             className="btn-primary btn align-right"
           >
@@ -165,16 +174,19 @@ export default function ExpensesRoute() {
               type="date"
               name="from"
               className="datepicker"
+              disabled={location.pathname === "/expenses/new"}
               defaultValue={
                 from && validateDate(from)
                   ? from
                   : today_minus_30.toLocaleString().split("T")[0]
               }
             />
+
             <select
               name="category"
               className="filter-category"
               defaultValue={cat ? cat : ""}
+              disabled={location.pathname === "/expenses/new"}
             >
               <option value="" style={{ color: "#666", fontWeight: "700" }}>
                 Select category
@@ -194,9 +206,13 @@ export default function ExpensesRoute() {
             ref={searchInputRef}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            disabled={location.pathname === "/expenses/new"}
           />
         </div>
       </div>
+
+      {/*New expense outlet */}
+      <Outlet />
 
       <div className="expenses-list flex-column">{expensesContent}</div>
     </div>

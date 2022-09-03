@@ -1,4 +1,4 @@
-/* EXPENESES HEADER */
+/* EXPENSES HEADER */
 
 .expenses-header {
   gap: 1em;
@@ -15,7 +15,7 @@
   display: inline-block;
   padding: 0.7em 1em;
   border: none;
-  border-bottom: 2px solid #aaa;
+  border-bottom: 2px solid var(--text-color);
   outline: none;
   border-radius: 6px;
   font-size: 1rem;
@@ -23,9 +23,9 @@
   transition: border 0.25s ease-in 0s;
   color: var(--text-color);
   background-color: var(--primary-clr);
-  flex-basis: 50%;
   max-width: 200px;
-  width: 0;
+  flex-basis: 50%;
+  width: 0; /*form proper flex shrink*/
 }
 
 .search-field {
@@ -45,16 +45,18 @@
 }
 
 ::-webkit-calendar-picker-indicator {
-  filter: invert(0.5);
+  filter: invert(0.8);
 }
 
 .datepicker:focus,
+.filter-category:focus,
 .search-field:focus {
   border-bottom: 2px solid var(--accent-clr);
 }
 
 .search-field::placeholder {
-  font-weight: 700;
+  color: var(--text-color);
+  opacity: 0.7;
 }
 
 /* EXPENSES LIST */
