@@ -100,6 +100,7 @@ export default function NewExpenseRoute() {
             step="0.01"
             min="0.00"
             name="amount"
+            defaultValue="0.00"
           />
         </div>
         {actionData?.error.amount && <div className="error">{actionData.error.amount}</div>}
