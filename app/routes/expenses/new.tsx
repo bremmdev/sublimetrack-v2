@@ -1,5 +1,16 @@
-import { type ActionFunction, json, type LoaderFunction, redirect } from "@remix-run/node";
-import { useLoaderData, Link, Form, useActionData, useTransition } from "@remix-run/react";
+import {
+  type ActionFunction,
+  json,
+  type LoaderFunction,
+  redirect,
+} from "@remix-run/node";
+import {
+  useLoaderData,
+  Link,
+  Form,
+  useActionData,
+  useTransition,
+} from "@remix-run/react";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import formStyles from "~/styles/form.css";
@@ -20,7 +31,6 @@ const validateAmount = (amount: number) => amount >= 0 && amount < 1000000;
 const validateDate = (date: Date) => !isNaN(+date);
 
 /* TYPE DEFS */
-
 type FormValues = Record<string, string>;
 type ErrorObj = Record<string, string | null>;
 
@@ -40,7 +50,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const error = {
     title: validateTitle(title) ? null : "Title must be at least 2 characters",
-    amount: validateAmount(+amount) ? null : "Amount must be between 0 and 1000000",
+    amount: validateAmount(+amount)
+      ? null
+      : "Amount must be between 0 and 1000000",
     date: validateDate(new Date(date)) ? null : "Please enter a valid date",
     category: category.length > 0 ? null : "Please choose a category",
   };
@@ -50,7 +62,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   //send filled in user values back to client along with the errors
   if (hasError) {
-    return json<ActionData>({ error, values });
+    return json<ActionData>({ error, values }, { status: 400 });
   }
 
   //no errors so add expense
@@ -79,55 +91,74 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function NewExpenseRoute() {
   const { categories } = useLoaderData() as LoaderData;
-  const actionData = useActionData() as ActionData
-  const transition = useTransition()
+  const actionData = useActionData() as ActionData;
+  const transition = useTransition();
 
-  const isAdding = transition.state === 'submitting'
+  const isAdding = transition.state === "submitting";
 
   return (
     <div className="form-wrapper">
       <Form method="post" className="form">
-        <div className="form-control">
-          <label htmlFor="title">Title</label>
-          <input type="text" id="title" name="title"/>
-        </div>
-        {actionData?.error.title && <div className="error">{actionData.error.title}</div>}
-        <div className="form-control">
-          <label htmlFor="amount">Amount</label>
-          <input
-            type="number"
-            id="amount"
-            step="0.01"
-            min="0.00"
-            name="amount"
-            defaultValue="0.00"
-          />
-        </div>
-        {actionData?.error.amount && <div className="error">{actionData.error.amount}</div>}
-        <div className="form-control">
-          <label htmlFor="date">Date</label>
-          <input type="date" id="date" name="date" />
-        </div>
-        {actionData?.error.date && <div className="error">{actionData.error.date}</div>}
-        <div className="form-control">
-          <label htmlFor="category">Category</label>
-          <select name="category">
-            <option value="" style={{ color: "#666", fontWeight: "700" }}>
-              Select category
-            </option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
+        <fieldset disabled={isAdding}>
+          <div className="form-control">
+            <label htmlFor="title">Title</label>
+            <input type="text" id="title" name="title" />
+          </div>
+          {actionData?.error.title && (
+            <div className="error">{actionData.error.title}</div>
+          )}
+          <div className="form-control">
+            <label htmlFor="amount">Amount</label>
+            <input
+              type="number"
+              id="amount"
+              step="0.01"
+              min="0.00"
+              name="amount"
+              defaultValue="0.00"
+            />
+          </div>
+          {actionData?.error.amount && (
+            <div className="error">{actionData.error.amount}</div>
+          )}
+          <div className="form-control">
+            <label htmlFor="date">Date</label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              defaultValue={new Date().toISOString().split("T")[0]}
+            />
+          </div>
+          {actionData?.error.date && (
+            <div className="error">{actionData.error.date}</div>
+          )}
+          <div className="form-control">
+            <label htmlFor="category">Category</label>
+            <select name="category">
+              <option value="" style={{ color: "#666", fontWeight: "700" }}>
+                Select category
               </option>
-            ))}
-          </select>
-        </div>
-        {actionData?.error.category && <div className="error">{actionData.error.category}</div>}
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {actionData?.error.category && (
+            <div className="error">{actionData.error.category}</div>
+          )}
+        </fieldset>
         <div className="form-actions flex justify-center">
-          <button type="submit" className="btn btn-primary">
-            {isAdding ? 'Adding...' : 'Add'}
+          <button type="submit" className="btn btn-primary" disabled={isAdding}>
+          {isAdding ? 'Adding...' : 'Add'}
           </button>
-          <Link to="/expenses" prefetch="intent" className="btn-secondary btn">
+          <Link
+            to="/expenses"
+            prefetch="intent"
+            className={`btn-secondary btn ${isAdding ? 'disabled-link' : ""}`}
+          >
             Go Back
           </Link>
         </div>

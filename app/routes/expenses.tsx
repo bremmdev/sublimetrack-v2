@@ -10,6 +10,7 @@ import {
   useSubmit,
   Outlet,
   useLocation,
+  useTransition
 } from "@remix-run/react";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
@@ -127,6 +128,8 @@ export default function ExpensesRoute() {
 
   const submit = useSubmit();
   const location = useLocation();
+  const transition = useTransition()
+  console.log(transition, location)
 
   const filterExpenses = (expenses: ExpenseWithCategory[], query: string) => {
     if (query === "") return expenses;
@@ -149,6 +152,10 @@ export default function ExpensesRoute() {
         ))}
       </ul>
     );
+  }
+
+  if(transition.state === 'loading'){
+    return <div className="spinner"></div>
   }
 
   return (
@@ -210,7 +217,7 @@ export default function ExpensesRoute() {
           />
         </div>
       </div>
-
+  
       {/*New expense outlet */}
       <Outlet />
 

@@ -6,11 +6,11 @@ export type ExpenseWithCategory = Prisma.ExpenseGetPayload<{
 }>;
 
 type ExpenseFilter = {
-  userId: string,
-  categoryId?: string,
+  userId: string;
+  categoryId?: string;
   date: {
-    gte: Date,
-  },
+    gte: Date;
+  };
 };
 
 export async function getExpenses(filter: ExpenseFilter) {
@@ -30,11 +30,10 @@ export async function getExpenses(filter: ExpenseFilter) {
   });
 }
 
-
 export async function createExpense(expenseObj: Expense) {
   return await prisma.expense.create({
-    data: expenseObj
-  })
+    data: expenseObj,
+  });
 }
 
 export async function deleteExpense(id: string) {

@@ -1,5 +1,5 @@
 import { json, type LoaderFunction } from "@remix-run/node";
-import { useLoaderData, Link } from "@remix-run/react";
+import { useLoaderData, Link, useTransition } from "@remix-run/react";
 import { getUserById } from "~/models/user.server";
 import { getCurrDate } from "~/models/date.server";
 import { getCurrentBudget } from "~/models/budget.server";
@@ -51,8 +51,8 @@ export const loader: LoaderFunction = async () => {
 
   const expenses = await getExpenses(expensesFilter);
 
-  if(!expenses) {
-    throw new Response("Expenses not found", { status: 404})
+  if (!expenses) {
+    throw new Response("Expenses not found", { status: 404 });
   }
 
   const { expensesCurrentMonth, expenseAmount } = getExpensesForCurrentMonth(
@@ -72,6 +72,8 @@ export default function IndexRoute() {
   const { firstName, currentBudget, expenseAmount, latestExpenses } =
     useLoaderData() as unknown as LoaderData;
 
+  const transition = useTransition();
+
   const currDateStr = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -83,7 +85,9 @@ export default function IndexRoute() {
   let latestExpensesContent: React.ReactElement = <p>Loading...</p>;
 
   if (latestExpenses.length === 0) {
-    latestExpensesContent = <p className="my-1">There are currently no expenses.</p>;
+    latestExpensesContent = (
+      <p className="my-1">There are currently no expenses.</p>
+    );
   }
 
   if (latestExpenses && latestExpenses.length > 0) {
@@ -94,6 +98,10 @@ export default function IndexRoute() {
         ))}
       </ul>
     );
+  }
+
+  if (transition.state === "loading") {
+    return <div className="spinner"></div>;
   }
 
   return (
