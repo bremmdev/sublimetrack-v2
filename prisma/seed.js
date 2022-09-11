@@ -10,10 +10,10 @@ async function clearDabatase() {
 }
 
 async function seed() {
-  // await createCategories();
+   await createCategories();
   // await createUsers();
   // await createBudgets();
-  await createExpenses();
+  //await createExpenses();
 }
 
 //clearDabatase();
@@ -53,56 +53,67 @@ async function createCategories() {
         name: "housing",
         color: "#87CEEB",
         id: "a3f09cca-e946-47be-920c-d768a8923792",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "utilities",
         color: "#FF5555",
         id: "7dd5c4f4-a4d0-478d-9389-490b589dc0ed",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "food",
         color: "#9986dd",
         id: "d05a1cdd-5341-4abd-9a53-e1a012d0dd3d",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "transportation",
         color: "#AAAAAA",
         id: "d600f80e-5810-4dda-9081-04826d51f53d",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "insurance",
         color: "#fbb871",
         id: "3fdb010d-547d-451f-856a-0e0d3e207462",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "recreation",
         color: "#00FF95",
         id: "2cd7d5d9-be84-472d-ae2d-19b79b9b22fb",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "medical costs",
         color: "#ec6d71",
         id: "ebe8e21c-0420-46c3-ad02-f253c67914de",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "investing",
         color: "#b7d6b7",
         id: "5d538cf7-d781-4974-91a8-9b2335ae1aae",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "miscellaneous",
         color: "#5959ab",
         id: "2544e726-3c82-42f7-91b9-def5b4b4f444",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "memberships",
         color: "#FFD8CC",
         id: "8297ef3b-8790-44d8-86de-cf211f31dcfd",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
       {
         name: "pets",
         color: "#f599dc",
         id: "4791d44d-3b4c-47e5-86b9-b96df69a1ba7",
+        userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       },
     ],
   });

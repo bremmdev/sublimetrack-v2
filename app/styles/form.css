@@ -35,6 +35,10 @@
   flex-basis: 75%;
 }
 
+.react-colorful{
+flex-basis:75%;
+}
+
 .form select {
   border: none;
 }
@@ -63,7 +67,8 @@
   }
 
   .form input,
-  .form select {
+  .form select,
+  .react-colorful {
     max-width: 70%;
     margin-left:1em;
   }

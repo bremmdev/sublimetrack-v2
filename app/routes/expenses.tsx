@@ -26,7 +26,7 @@ import ExpenseItem from "~/components/Expenses/ExpenseItem";
 import { v4 as uuid } from "uuid";
 import { Prisma } from "@prisma/client";
 import { useState, useRef } from "react";
-import { getCategories, type Category } from "~/models/category.server";
+import { getCategoriesByUserId, type Category } from "~/models/category.server";
 import { getCurrDate } from "~/models/date.server";
 
 export const links = () => [
@@ -51,7 +51,6 @@ const validateDate = (from: string) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData();
   const action = formData.get("_action");
-  console.log('jaaa', action)
 
   if (action === "create") {
     const expense = {
@@ -93,7 +92,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const startDate =
     from && validateDate(from) ? new Date(from) : today_minus_30;
 
-  const categories = await getCategories();
+  const categories = await getCategoriesByUserId("70e0cff2-7589-4de8-9f2f-4e372a5a15f3");
+
+  console.log(categories)
 
   if (!categories) {
     throw new Response("Categories not found", { status: 404 });
@@ -129,7 +130,6 @@ export default function ExpensesRoute() {
   const submit = useSubmit();
   const location = useLocation();
   const transition = useTransition()
-  console.log(transition, location)
 
   const filterExpenses = (expenses: ExpenseWithCategory[], query: string) => {
     if (query === "") return expenses;

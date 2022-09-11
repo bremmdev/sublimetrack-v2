@@ -1,0 +1,39 @@
+.category-tags {
+  display: flex;
+  gap: 2em;
+  flex-wrap: wrap;
+}
+
+.category-tag {
+  padding: 0.5em 1.2em;
+  border-radius: 6px;
+  font-weight: 700;
+  background-color: var(--primary-clr);
+  align-items: center;
+}
+
+/* DELETE BUTTON */
+
+.delete-cat-icon {
+  color: var(--accent-clr);
+  margin-left: 0.5em;
+  font-size: 1.5rem;
+  transform: scale(1);
+  position: relative;
+  top: 0.1em;
+  cursor:pointer;
+}
+
+.delete-cat-icon:hover {
+  transform: scale(1.15);
+  transition: transform 0.3s;
+}
+
+@media (max-width: 560px) {
+  .category-tags {
+    gap: 1.5em;
+  }
+  .category-tag {
+    padding: 0.5em 1em;
+  }
+}

@@ -12,7 +12,7 @@ const ExpenseItem = (props: Props) => {
 
   const fetcher = useFetcher();
 
-  //prevent user from deleting same item multiple times in a row
+  //useful to prevent user from deleting same item multiple times in a row
   const isDeleting =
     fetcher.submission &&
     fetcher.submission.formData.get("expense_id") === expense.id;
