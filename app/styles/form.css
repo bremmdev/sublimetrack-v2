@@ -35,8 +35,9 @@
   flex-basis: 75%;
 }
 
-.react-colorful{
-flex-basis:75%;
+.react-colorful {
+  flex-basis: 75%;
+  height:8rem !important;
 }
 
 .form select {
@@ -70,7 +71,7 @@ flex-basis:75%;
   .form select,
   .react-colorful {
     max-width: 70%;
-    margin-left:1em;
+    margin-left: 1em;
   }
 
   .form .error {
