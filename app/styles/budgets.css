@@ -1,0 +1,62 @@
+.budgets-list li {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--text-color);
+}
+
+.budgets-list .hidden {
+  display: none;
+  border: none;
+}
+
+/* styles the first visible item if it is the first child */
+/* and will style the first visible item following a hidden item */
+/* needed for optimistic UI deletions */
+
+.budgets-list li:not(.hidden):first-child,
+.budgets-list li.hidden + li:not(.hidden) {
+  border-top: none;
+}
+
+/* these will reset all following visible items to original style*/
+.budgets-list li:not(.hidden):first-child ~ li,
+.budgets-list li.hidden + li:not(.hidden) ~ li {
+  border-top: 1px solid var(--text-color);
+}
+
+.budgets-list .current {
+  color: var(--accent-clr);
+}
+
+.budgets-list li > div {
+  margin: 1em 0;
+}
+
+.budget-date {
+  text-align: left;
+  flex-basis: 80%;
+  flex-grow: 0;
+  font-weight:700;
+}
+
+.budget-amount {
+  text-align: right;
+  flex-basis: 20%;
+  padding-right:2.5em;
+}
+
+.delete-budget-icon {
+  color: var(--error-clr);
+  font-size: 1.5rem;
+  transform: scale(1);
+  position: absolute;
+  top:0.5em;
+  right:0;
+}
+
+.delete-budget-icon:hover {
+  transform: scale(1.15);
+  transition: transform 0.3s;
+}
