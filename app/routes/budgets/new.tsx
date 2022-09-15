@@ -5,18 +5,19 @@ import {
   redirect,
 } from "@remix-run/node";
 import {
-  Link,
   Form,
   useActionData,
   useTransition,
+  useLoaderData
 } from "@remix-run/react";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import formStyles from "~/styles/form.css";
 import { v4 as uuid } from "uuid";
-import { getBudgetsByUserId, createBudget, type Budget } from "~/models/budget.server";
+import { getBudgetsByUserId, createBudget } from "~/models/budget.server";
 import { Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
+import FormActions from "~/components/Forms/FormActions";
 
 export const links = () => [
   { href: globalStyles, rel: "stylesheet" },
@@ -35,19 +36,20 @@ type ActionData = {
 
 //VALIDATION FUNCTIONS
 const validateStartDate = (date: Date, latestBudgetDate?: Date) => {
-  return (date.getDate() === 1 && (!latestBudgetDate || date > latestBudgetDate)) ? null : 'Date must be the first day of a future month'
+  if(!latestBudgetDate){
+    return date.getDate() === 1 ? null : 'Date must be the first day of the month'
+  }
+  return (date.getDate() === 1 &&  date > latestBudgetDate) ? null : 'Date must be the first day of a future month'
 }
-const validateAmount = (amount: number) => amount >= 0 && amount < 1000000;
+const validateAmount = (amount: number) => amount >= 0 && amount < 1000000 ? null : "Amount must be between 0 and 1000000";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData();
   const values = Object.fromEntries(formData) as FormValues;
 
-  const { startDate, amount, _action } = values;
+  const { startDate, amount } = values;
 
-  console.log(startDate);
-
-  //fetch categories, needed for validation
+  //fetch budgets, needed for validation
   const budgets = await getBudgetsByUserId(
     "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
   );
@@ -62,8 +64,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   const error = {
     startDate: validateStartDate(new Date(startDate), latestBudgetStartDate),
     amount: validateAmount(+amount)
-      ? null
-      : "Amount must be between 0 and 1000000",
   };
 
   //check if any of the fields is invalid
@@ -75,6 +75,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   //put startDate of new budget as endDate on current budget
+  //only do this if there are already budgets
   if (budgets.length > 0) {
     await prisma.budget.update({
       where: {
@@ -100,16 +101,23 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return null;
+  const budgets = await getBudgetsByUserId("70e0cff2-7589-4de8-9f2f-4e372a5a15f3")
+  if(!budgets){
+    throw new Response("Loading form failed", { status: 404})
+  }
+  //check for an existing future budget, needed for warning message to user
+  const futureBudget = budgets.find(budget => new Date(budget.startDate) > new Date())
+  return futureBudget ? true : false
 };
 
 export default function NewBudgetRoute() {
   const actionData = useActionData() as ActionData;
- 
+  const hasFutureBudget:boolean = useLoaderData()
   const transition = useTransition();
 
   const isAdding = transition?.submission?.formData.get('_action') === 'create';
 
+  //calculate the first day of next month as default
   const currDate = new Date()
   const firstDayNextMonth =  new Date(currDate.getFullYear(), currDate.getMonth() + 1, 1).toLocaleDateString()
   let [month, day, year] = firstDayNextMonth.split('/')
@@ -117,6 +125,7 @@ export default function NewBudgetRoute() {
 
   return (
     <div className="form-wrapper">
+      {hasFutureBudget && <p className='error centered'>There is already a future budget. Delete it before creating a new one.</p>}
       <Form method="post" className="form">
         <fieldset disabled={isAdding}>
           <div className="form-control">
@@ -141,18 +150,7 @@ export default function NewBudgetRoute() {
             <div className="error">{actionData.error.amount}</div>
           )}
         </fieldset>
-        <div className="form-actions flex justify-center">
-          <button type="submit" className="btn btn-primary" name="_action" value="create" disabled={isAdding}>
-          {isAdding ? 'Adding...' : 'Add'}
-          </button>
-          <Link
-            to="/budgets"
-            prefetch="intent"
-            className={`btn-secondary btn ${isAdding ? 'disabled-link' : ""}`}
-          >
-            Go Back
-          </Link>
-        </div>
+        <FormActions redirectTo="/budgets" isAdding={isAdding} shouldDisableSubmit={isAdding || hasFutureBudget}/>
       </Form>
     </div>
   );

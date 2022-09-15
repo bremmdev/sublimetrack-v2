@@ -5,7 +5,6 @@ import {
   redirect,
 } from "@remix-run/node";
 import {
-  Link,
   Form,
   useActionData,
   useTransition,
@@ -17,6 +16,7 @@ import { v4 as uuid } from "uuid";
 import { getCategoriesByUserId, createCategory, type Category } from "~/models/category.server";
 import { HexColorPicker } from "react-colorful";
 import { useState } from "react";
+import FormActions from "~/components/Forms/FormActions";
 
 export const links = () => [
   { href: globalStyles, rel: "stylesheet" },
@@ -123,19 +123,8 @@ export default function NewCategoryRoute() {
             <div className="error">{actionData.error.color}</div>
           )}
         </fieldset>
-        <div className="form-actions flex justify-center">
-          <button type="submit" className="btn btn-primary" name="_action" value="create" disabled={isAdding}>
-          {isAdding ? 'Adding...' : 'Add'}
-          </button>
-          <Link
-            to="/categories"
-            prefetch="intent"
-            className={`btn-secondary btn ${isAdding ? 'disabled-link' : ""}`}
-          >
-            Go Back
-          </Link>
-        </div>
-      </Form>
+       <FormActions redirectTo="/categories" isAdding={isAdding} shouldDisableSubmit={isAdding}/>
+       </Form>
     </div>
   );
 }

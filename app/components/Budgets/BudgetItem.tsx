@@ -43,9 +43,6 @@ const BudgetItem = (props: Props) => {
     currDate >= new Date(budget.startDate) &&
     (!budget.endDate || currDate <= new Date(budget.endDate));
 
-  //only future budgets can be deleted
-  const isFutureBudget = currDate < new Date(budget.startDate);
-
   const budgetItemClasses = `${isDeleting ? "hidden" : ""} ${
     isCurrentBudget ? "current" : ""
   }`;
@@ -55,7 +52,7 @@ const BudgetItem = (props: Props) => {
       <li className={budgetItemClasses}>
         <div className="budget-date">{budgetText}</div>
         <div className="budget-amount">{Number(budget.amount).toFixed(2)}</div>
-        {isFutureBudget && (
+        {!isCurrentBudget && (
           <fetcher.Form method="post">
             <button
               type="submit"

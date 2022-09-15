@@ -6,7 +6,6 @@ import {
 } from "@remix-run/node";
 import {
   useLoaderData,
-  Link,
   Form,
   useActionData,
   useTransition,
@@ -18,6 +17,7 @@ import { createExpense } from "~/models/expense.server";
 import { v4 as uuid } from "uuid";
 import { Prisma } from "@prisma/client";
 import { getCategoriesByUserId, type Category } from "~/models/category.server";
+import FormActions from "~/components/Forms/FormActions";
 
 export const links = () => [
   { href: globalStyles, rel: "stylesheet" },
@@ -94,7 +94,7 @@ export default function NewExpenseRoute() {
   const actionData = useActionData() as ActionData;
   const transition = useTransition();
 
-  const isAdding = transition.state === "submitting";
+  const isAdding = transition?.submission?.formData.get('_action') === 'create';
 
   return (
     <div className="form-wrapper">
@@ -150,18 +150,7 @@ export default function NewExpenseRoute() {
             <div className="error">{actionData.error.category}</div>
           )}
         </fieldset>
-        <div className="form-actions flex justify-center">
-          <button type="submit" className="btn btn-primary" disabled={isAdding}>
-          {isAdding ? 'Adding...' : 'Add'}
-          </button>
-          <Link
-            to="/expenses"
-            prefetch="intent"
-            className={`btn-secondary btn ${isAdding ? 'disabled-link' : ""}`}
-          >
-            Go Back
-          </Link>
-        </div>
+        <FormActions redirectTo="/expenses" isAdding={isAdding} shouldDisableSubmit={isAdding}/>
       </Form>
     </div>
   );

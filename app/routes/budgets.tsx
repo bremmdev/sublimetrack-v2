@@ -7,7 +7,6 @@ import {
   useLoaderData,
   Outlet,
   useTransition,
-  useActionData,
   Link,
 } from "@remix-run/react";
 import {
@@ -51,6 +50,7 @@ export const action: ActionFunction = async ({ request }) => {
         "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
       );
 
+      //remove the endDate from current budget
       await prisma.budget.update({
         where: {
           id: budgets[0].id,
