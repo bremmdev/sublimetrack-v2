@@ -26,8 +26,12 @@
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  align-items: center;
+  align-items:start;
   gap: 3em 1em;
+}
+
+.grid > section {
+  align-content: start;
 }
 
 @media (min-width: 1200px) {

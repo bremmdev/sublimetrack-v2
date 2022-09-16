@@ -16,6 +16,7 @@ import progressbarStyles from "~/styles/progressbar.css";
 import React from "react";
 import ExpenseItem from "~/components/Expenses/ExpenseItem";
 import ProgressBar from "~/components/Overview/ProgressBar";
+import DoughnutChart from "~/components/Charts/DoughnutChart";
 
 export const links = () => [
   { href: globalStyles, rel: "stylesheet" },
@@ -28,7 +29,7 @@ export const links = () => [
 type LoaderData = {
   firstName: string;
   currentBudget: number;
-  latestExpenses: ExpenseWithCategory[];
+  expenses: ExpenseWithCategory[];
   expenseAmount: number;
 };
 
@@ -63,13 +64,13 @@ export const loader: LoaderFunction = async () => {
   return json<LoaderData>({
     firstName: user.firstName,
     currentBudget: +(currentBudget?.amount || 0),
-    latestExpenses: expensesCurrentMonth.slice(0, 5),
+    expenses: expensesCurrentMonth,
     expenseAmount,
   });
 };
 
 export default function IndexRoute() {
-  const { firstName, currentBudget, expenseAmount, latestExpenses } =
+  const { firstName, currentBudget, expenseAmount, expenses } =
     useLoaderData() as unknown as LoaderData;
 
   const transition = useTransition();
@@ -82,18 +83,16 @@ export default function IndexRoute() {
 
   const balanceAmount = currentBudget - expenseAmount;
 
-  let latestExpensesContent: React.ReactElement = <p>Loading...</p>;
+  let expensesContent: React.ReactElement = <p>Loading...</p>;
 
-  if (latestExpenses.length === 0) {
-    latestExpensesContent = (
-      <p className="my-1">There are currently no expenses.</p>
-    );
+  if (expenses.length === 0) {
+    expensesContent = <p className="my-1">There are currently no expenses.</p>;
   }
 
-  if (latestExpenses && latestExpenses.length > 0) {
-    latestExpensesContent = (
-      <ul className="my-1">
-        {latestExpenses.map((expense) => (
+  if (expenses && expenses.length > 0) {
+    expensesContent = (
+      <ul>
+        {expenses.slice(0, 5).map((expense) => (
           <ExpenseItem expense={expense} key={expense.id} />
         ))}
       </ul>
@@ -143,7 +142,7 @@ export default function IndexRoute() {
 
         <section className="expenses-list flex-column">
           <h3>Latest expenses</h3>
-          {latestExpensesContent}
+          {expensesContent}
           <Link
             to="/expenses"
             prefetch="intent"
@@ -152,8 +151,9 @@ export default function IndexRoute() {
             All Expenses
           </Link>
         </section>
-        <section className="flex justify-center">
-          Expenses per category doughnutchart
+        <section className="flex-column centered justify-center">
+          <h3>Expenses per category</h3>
+          <DoughnutChart expenses={expenses} />
         </section>
       </div>
     </>

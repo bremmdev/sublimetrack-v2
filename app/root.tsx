@@ -76,14 +76,14 @@ function NavPanel() {
       text: "Overview",
     },
     {
-      to: "/budgets",
-      icon: <IoWalletOutline className="nav-icon" />,
-      text: "Budgets",
-    },
-    {
       to: "/expenses",
       icon: <MdViewList className="nav-icon" />,
       text: "Expenses",
+    },
+    {
+      to: "/budgets",
+      icon: <IoWalletOutline className="nav-icon" />,
+      text: "Budgets",
     },
     {
       to: "/categories",
