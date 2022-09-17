@@ -287,4 +287,8 @@ fieldset {
   :root {
     font-size: 0.725rem;
   }
+
+  .hidden-mobile-560 {
+    display: none;
+  }
 }

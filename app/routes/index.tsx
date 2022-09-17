@@ -13,6 +13,7 @@ import utilStyles from "~/styles/utils.css";
 import overviewStyles from "~/styles/overview.css";
 import expenseStyles from "~/styles/expenses.css";
 import progressbarStyles from "~/styles/progressbar.css";
+import chartStyles from "~/styles/charts.css";
 import React from "react";
 import ExpenseItem from "~/components/Expenses/ExpenseItem";
 import ProgressBar from "~/components/Overview/ProgressBar";
@@ -24,6 +25,7 @@ export const links = () => [
   { href: overviewStyles, rel: "stylesheet" },
   { href: expenseStyles, rel: "stylesheet" },
   { href: progressbarStyles, rel: "stylesheet" },
+  { href: chartStyles, rel: "stylesheet" }
 ];
 
 type LoaderData = {
@@ -153,7 +155,7 @@ export default function IndexRoute() {
         </section>
         <section className="flex-column centered justify-center">
           <h3>Expenses per category</h3>
-          <DoughnutChart expenses={expenses} />
+          {expenses.length === 0 ? <p className="my-1">There are currently no expenses.</p> : <DoughnutChart expenses={expenses} /> }
         </section>
       </div>
     </>

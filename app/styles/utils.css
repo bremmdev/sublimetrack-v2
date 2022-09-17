@@ -21,6 +21,10 @@
   margin-left: auto;
 }
 
+.justify-between{
+  justify-content: space-between;
+}
+
 /* GRID */
 
 .grid {
@@ -28,6 +32,10 @@
   grid-template-columns: 1fr;
   align-items:start;
   gap: 3em 1em;
+}
+
+.grid .span-two{
+  grid-column: span 1;
 }
 
 .grid > section {
@@ -38,6 +46,9 @@
   .grid {
     grid-template-columns: 1fr 1fr;
     gap: 3em;
+  }
+  .grid .span-two{
+    grid-column: span 2;
   }
 }
 
