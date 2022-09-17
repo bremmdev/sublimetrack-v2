@@ -111,4 +111,8 @@
     padding:1em;
   }
 
+  .year-selector{
+    max-width:60px;
+  }
+
 }
