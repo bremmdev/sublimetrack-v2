@@ -1,9 +1,7 @@
 import {
   useLoaderData,
-  Link,
   Form,
   useSubmit,
-  useLocation,
   useTransition,
 } from "@remix-run/react";
 import { type LoaderFunction, json } from "@remix-run/node";
@@ -28,8 +26,8 @@ type LoaderData = {
   selectedYear: number;
 };
 
-const validateYear = (year: string | null) => {
-  return year && Number.isInteger(+year) && year.length === 4;
+const validateYear = (year: string) => {
+  return Number.isInteger(+year) && year.length === 4;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -37,7 +35,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const year = new URLSearchParams(url.search).get("year");
 
-  const selectedYear = validateYear(year) ? +year! : currYear;
+  const selectedYear = year && validateYear(year) ? +year : currYear;
 
   const expensesFilter = {
     userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3",
@@ -50,7 +48,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const expenses = await getExpenses(expensesFilter);
 
   if (!expenses) {
-    throw new Response("Loading expenses failed", { status: 404 });
+    throw new Response("Fetching expenses failed", { status: 404 });
   }
 
   return json<LoaderData>({ expenses, selectedYear });
@@ -75,7 +73,7 @@ export default function InsightsRoute() {
 
   return (
     <>
-      <div className="insights-header">
+      <div className="insights-header flex align-center gap-2">
         <h2>Insights</h2>
         <Form
           method="get"
