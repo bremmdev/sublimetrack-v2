@@ -41,6 +41,7 @@ body {
   min-height: 100vh;
   width: 14rem;
   border-right: 2px solid var(--accent-clr);
+  flex-shrink: 0;
 }
 
 .logo-container {
