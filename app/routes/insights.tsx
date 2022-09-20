@@ -71,6 +71,8 @@ export default function InsightsRoute() {
   //add a zero to parameters in order to default to 0 if there are no expenses
   const highestAmount = Math.max(...expenses.map((exp) => +exp.amount), 0);
 
+  const isSubmitting = transition.state === "submitting";
+
   return (
     <>
       <div className="insights-header flex align-center gap-2">
@@ -81,6 +83,7 @@ export default function InsightsRoute() {
           onChange={(e) => submit(e.currentTarget, { replace: true })}
         >
           <button
+            disabled={isSubmitting}
             className="year-selector-prev"
             aria-label="previous year"
             onClick={(e) => {
@@ -99,6 +102,7 @@ export default function InsightsRoute() {
             value={selectedYear}
           ></input>
           <button
+            disabled={isSubmitting}
             onClick={(e) => {
               setSelectedYear((prevYear) => prevYear + 1);
             }}
