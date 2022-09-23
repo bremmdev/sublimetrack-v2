@@ -126,8 +126,8 @@ h4 {
 }
 
 .btn-primary:hover {
-  opacity: 0.8;
-  transition: opacity 0.25s ease-in;
+  opacity:0.8;
+  transition: opacity 0.2s ease-in;
 }
 
 .btn-primary:disabled {
@@ -155,9 +155,9 @@ h4 {
   border: none;
 }
 
-.disabled-link{
+.disabled-link {
   pointer-events: none;
-  opacity:0.7;
+  opacity: 0.7;
 }
 
 /* RESETS */
@@ -173,23 +173,49 @@ a {
 }
 
 fieldset {
- border:none;
+  border: none;
+}
+
+/* ERROR AND CATCH BOUNDARIES */
+
+.catch-boundary,
+.error-boundary {
+  text-align: center;
+}
+
+.catch-boundary h1,
+.error-boundary h1 {
+  font-size: calc(5vw + 5rem);
+  background: linear-gradient(var(--accent-clr), var(--text-color));
+  -webkit-background-clip: text;
+  background-clip:text;
+  -webkit-text-fill-color: transparent;
+}
+
+.error-boundary h1 {
+  font-size: 2rem;
+}
+
+.catch-boundary p,
+.error-boundary p {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 /* LOADING SPINNER */
 
-.spinner{
-  display:flex;
+.spinner {
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .spinner::after {
-  content: '';
-  width:2.5rem;
-  height:2.5rem;
-  border:4px solid var(--accent-clr);
-  border-radius:6px;
+  content: "";
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 4px solid var(--accent-clr);
+  border-radius: 6px;
   animation: spin 3s linear infinite;
 }
 

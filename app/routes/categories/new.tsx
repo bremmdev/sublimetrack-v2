@@ -4,16 +4,16 @@ import {
   type LoaderFunction,
   redirect,
 } from "@remix-run/node";
-import {
-  Form,
-  useActionData,
-  useTransition,
-} from "@remix-run/react";
+import { Form, useActionData, useTransition } from "@remix-run/react";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import formStyles from "~/styles/form.css";
 import { v4 as uuid } from "uuid";
-import { getCategoriesByUserId, createCategory, type Category } from "~/models/category.server";
+import {
+  getCategoriesByUserId,
+  createCategory,
+  type Category,
+} from "~/models/category.server";
 import { HexColorPicker } from "react-colorful";
 import { useState } from "react";
 import FormActions from "~/components/Forms/FormActions";
@@ -67,7 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const error = {
     name: validateName(name, categories),
-    color: color.length > 0 ? null : 'Please choose a color'
+    color: color.length > 0 ? null : "Please choose a color",
   };
 
   //check if any of the fields is invalid
@@ -91,16 +91,16 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return null
+  return null;
 };
 
 export default function NewCategoryRoute() {
   const actionData = useActionData() as ActionData;
 
-  const [color, setColor] = useState<string>('#cccccc')
+  const [color, setColor] = useState<string>("#cccccc");
   const transition = useTransition();
 
-  const isAdding = transition?.submission?.formData.get('_action') === 'create';
+  const isAdding = transition?.submission?.formData.get("_action") === "create";
 
   return (
     <div className="form-wrapper">
@@ -115,16 +115,20 @@ export default function NewCategoryRoute() {
           )}
           <div className="form-control">
             <label htmlFor="color">Color</label>
-            <HexColorPicker color={color} onChange={setColor}/>
-            <input type="hidden" name="color" value={color}/>
+            <HexColorPicker color={color} onChange={setColor} />
+            <input type="hidden" name="color" value={color} />
           </div>
-         
+
           {actionData?.error.color && (
             <div className="error">{actionData.error.color}</div>
           )}
         </fieldset>
-       <FormActions redirectTo="/categories" isAdding={isAdding} shouldDisableSubmit={isAdding}/>
-       </Form>
+        <FormActions
+          redirectTo="/categories"
+          isAdding={isAdding}
+          shouldDisableSubmit={isAdding}
+        />
+      </Form>
     </div>
   );
 }

@@ -94,8 +94,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const categories = await getCategoriesByUserId("70e0cff2-7589-4de8-9f2f-4e372a5a15f3");
 
-  console.log(categories)
-
   if (!categories) {
     throw new Response("Categories not found", { status: 404 });
   }
@@ -113,7 +111,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const expenses = await getExpenses(expensesFilter);
 
   if (!expenses) {
-    throw new Response("Loading expenses failed", { status: 404 });
+    throw new Response("Expenses not found", { status: 404 });
   }
 
   return json<LoaderData>({ expenses, categories, from, cat, today_minus_30 });

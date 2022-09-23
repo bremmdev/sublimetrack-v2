@@ -48,7 +48,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const expenses = await getExpenses(expensesFilter);
 
   if (!expenses) {
-    throw new Response("Fetching expenses failed", { status: 404 });
+    throw new Response("Expenses not found", { status: 404 });
   }
 
   return json<LoaderData>({ expenses, selectedYear });

@@ -1,9 +1,25 @@
-import { type ActionFunction, json, type LoaderFunction, redirect } from "@remix-run/node";
-import { useLoaderData, Outlet, useTransition, useActionData, Link } from "@remix-run/react";
+import {
+  type ActionFunction,
+  json,
+  type LoaderFunction,
+  redirect,
+} from "@remix-run/node";
+import {
+  useLoaderData,
+  Outlet,
+  useTransition,
+  useActionData,
+  Link,
+} from "@remix-run/react";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import categoryStyles from "~/styles/categories.css";
-import { getCategoriesByUserId, deleteCategory, type Category, type PrismaError } from "~/models/category.server";
+import {
+  getCategoriesByUserId,
+  deleteCategory,
+  type Category,
+  type PrismaError,
+} from "~/models/category.server";
 import CategoryTag from "~/components/Categories/CategoryTag";
 import invariant from "tiny-invariant";
 
@@ -19,7 +35,7 @@ type LoaderData = {
 
 type ActionData = null | {
   error: string;
-}
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -38,23 +54,22 @@ export const action: ActionFunction = async ({ request }) => {
         throw new Error();
       }
     } catch (e) {
-      let errorMessage: string = ''
+      let errorMessage: string = "";
 
-      if((e as PrismaError).code === 'P2003'){
-        errorMessage = `Deletion failed. There are expenses for category '${categoryName}'. Please delete these first.`
-      }
-      else{
-        errorMessage = `Deleting category '${categoryName}' failed`
+      if ((e as PrismaError).code === "P2003") {
+        errorMessage = `Deletion failed. There are expenses for category '${categoryName}'. Please delete these first.`;
+      } else {
+        errorMessage = `Deleting category '${categoryName}' failed`;
       }
       return json<ActionData>({ error: errorMessage });
     }
   }
 
   //if we delete a category while on the '/categories/new' route, we stay on this Route
-  if(originRoute === '/categories/new'){
-    return redirect(originRoute)
+  if (originRoute === "/categories/new") {
+    return redirect(originRoute);
   }
-  return null
+  return null;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -72,19 +87,20 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function CategoriesRoute() {
   const { categories } = useLoaderData() as LoaderData;
 
-  const actionData = useActionData() as ActionData
+  const actionData = useActionData() as ActionData;
 
   const transition = useTransition();
-
 
   if (transition.type === "normalLoad") {
     return <div className="spinner"></div>;
   }
 
-  let categoriesContent:React.ReactNode = ''
+  let categoriesContent: React.ReactNode = "";
 
-  if(categories.length === 0) {
-    categoriesContent = <p className="my-2">There are currently no categories.</p>
+  if (categories.length === 0) {
+    categoriesContent = (
+      <p className="my-2">There are currently no categories.</p>
+    );
   }
 
   if (categories.length > 0) {
@@ -113,7 +129,7 @@ export default function CategoriesRoute() {
         </Link>
       </div>
       {/*New category outlet */}
-      <Outlet /> 
+      <Outlet />
       {categoriesContent}
     </div>
   );

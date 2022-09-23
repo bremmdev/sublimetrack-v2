@@ -1,4 +1,8 @@
-import type { LinksFunction, MetaFunction, ErrorBoundaryComponent } from "@remix-run/node";
+import type {
+  LinksFunction,
+  MetaFunction,
+  ErrorBoundaryComponent,
+} from "@remix-run/node";
 import React from "react";
 import {
   Links,
@@ -8,6 +12,7 @@ import {
   ScrollRestoration,
   NavLink,
   useCatch,
+  Link,
 } from "@remix-run/react";
 import { FiMonitor } from "react-icons/fi";
 import { IoStatsChart, IoWalletOutline } from "react-icons/io5";
@@ -127,26 +132,37 @@ function NavPanel() {
   );
 }
 
+//for unexpected errors
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   return (
     <Document>
       <Layout>
-        <h1>Oops...something went wrong</h1>
-        <p className="error-boundary-msg">{error.message}</p>
+        <div className="error-boundary flex-column align-center justify-center">
+          <h1>Oops...something went wrong</h1>
+          <p className="my-1">{error.message}</p>
+        </div>
       </Layout>
     </Document>
   );
-}
+};
 
+//for expected errors like 404
 export function CatchBoundary() {
   const caught = useCatch();
-  const errorMessage = caught.data ? JSON.stringify(caught.data, null, 2).replace(/['"]/gi, '') : `${caught.status}: ${caught.statusText}`
+
+  //the message we provide to the thrown response is available on caught.data
+  const errorMessage = caught.data ?? "Page not found";
 
   return (
     <Document>
       <Layout>
-        <h1>Oops...something went wrong</h1>
-        <p className="error-boundary-msg">{errorMessage}</p>
+        <div className="catch-boundary flex-column align-center justify-center">
+          <h1>{caught.status}</h1>
+          <p>{errorMessage}</p>
+          <Link to="/" className="btn btn-primary my-2">
+            Home Page
+          </Link>
+        </div>
       </Layout>
     </Document>
   );
