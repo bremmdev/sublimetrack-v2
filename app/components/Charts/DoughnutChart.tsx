@@ -2,6 +2,8 @@ import React from "react";
 import { type ExpenseWithCategory } from "~/models/expense.server";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Legend } from "chart.js";
+import { ThemeContext, type ThemeType } from "../../root";
+import { useContext } from "react";
 
 type Props = {
   expenses: ExpenseWithCategory[];
@@ -14,22 +16,9 @@ interface categoriesAndColorsObj {
 
 ChartJS.register(ArcElement, Legend);
 
-const options = {
-  cutout: "60%",
-  plugins: {
-    legend: {
-      labels: {
-        color: "white",
-        padding: 12,
-        boxWidth: 10,
-        usePointStyle: true,
-        font: { size: 13 },
-      },
-    },
-  },
-};
-
-const getDataFromExpenses = (expenses: ExpenseWithCategory[]): categoriesAndColorsObj => {
+const getDataFromExpenses = (
+  expenses: ExpenseWithCategory[]
+): categoriesAndColorsObj => {
   let categories: string[] = [];
   let categoryColors: string[] = [];
   expenses.forEach((exp) => {
@@ -42,7 +31,10 @@ const getDataFromExpenses = (expenses: ExpenseWithCategory[]): categoriesAndColo
   return { categories, categoryColors };
 };
 
-const getExpensesPerCategory = (expenses: ExpenseWithCategory[], categories: string[]): number[] => {
+const getExpensesPerCategory = (
+  expenses: ExpenseWithCategory[],
+  categories: string[]
+): number[] => {
   let totalExpensePerCategory: number[] = [];
   categories.forEach((cat) => {
     const sum = expenses
@@ -56,9 +48,26 @@ const getExpensesPerCategory = (expenses: ExpenseWithCategory[], categories: str
 const DoughnutChart = (props: Props) => {
   const { expenses } = props;
 
+  const { theme } = useContext(ThemeContext) as ThemeType;
+
   const { categories, categoryColors } = getDataFromExpenses(expenses);
   const expensesPerCategory = getExpensesPerCategory(expenses, categories);
 
+  //options for donut char
+  const options = {
+    cutout: "60%",
+    plugins: {
+      legend: {
+        labels: {
+          color: theme === "dark" ? "white" : "black",
+          padding: 12,
+          boxWidth: 10,
+          usePointStyle: true,
+          font: { size: 13 },
+        },
+      },
+    },
+  };
   //data for donut chart
   const data = {
     labels: categories,

@@ -3,7 +3,7 @@ import type {
   MetaFunction,
   ErrorBoundaryComponent,
 } from "@remix-run/node";
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
   Links,
   Meta,
@@ -20,6 +20,8 @@ import { MdViewList, MdOutlineWindow } from "react-icons/md";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import logoUrl from "./assets/logo.svg";
+import logoLightUrl from "./assets/logo_light.svg";
+import ThemeToggle from "./components/UI/ThemeToggle";
 
 type Props = {
   children?: React.ReactNode;
@@ -36,7 +38,37 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-export default function App() {
+export type ThemeType = {
+  theme: string;
+  setTheme: (v:string) => void
+}
+
+export const ThemeContext = React.createContext<any>('dark');
+
+function ThemeProvider(props: Props) {
+  const [theme, setTheme] = useState<string>("dark");
+
+  const contextVal: ThemeType = {
+    theme, 
+    setTheme
+  }
+
+  return (
+    <ThemeContext.Provider value={contextVal}>
+      {props.children}
+    </ThemeContext.Provider>
+  );
+}
+
+export default function AppWithThemeProvider() {
+  return (
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  );
+}
+
+function App() {
   return (
     <Document>
       <Layout>
@@ -47,8 +79,11 @@ export default function App() {
 }
 
 function Document({ children }: Props) {
+
+  const { theme }= useContext(ThemeContext);
+ 
   return (
-    <html lang="en">
+    <html lang="en" className={theme === 'dark' ? 'dark' : 'light'}>
       <head>
         <Meta />
         <Links />
@@ -63,8 +98,12 @@ function Document({ children }: Props) {
 }
 
 function Layout({ children }: Props) {
+
+  const { setTheme }= useContext(ThemeContext);
+
   return (
     <div className="page-container flex">
+      <ThemeToggle setTheme={setTheme} />
       <NavPanel />
       <main className="main-container p-5">{children}</main>
     </div>
@@ -73,6 +112,8 @@ function Layout({ children }: Props) {
 
 function NavPanel() {
   const activeClassName = "active-navlink";
+
+  const { theme }= useContext(ThemeContext);
 
   const navLinks = [
     {
@@ -105,7 +146,7 @@ function NavPanel() {
   return (
     <div className="nav-panel flex-column align-center py-3">
       <div className="logo-container flex-column align-center">
-        <img className="logo" src={logoUrl} alt="Sublimetrack Logo" />
+        <img className="logo" src={theme === 'dark' ? logoUrl : logoLightUrl} alt="Sublimetrack Logo" />
         <h1 className="hidden-mobile">
           sublime<span className="title-highlight">track</span>
         </h1>

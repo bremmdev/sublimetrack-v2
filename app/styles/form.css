@@ -1,6 +1,6 @@
 .form-wrapper {
   width: 100%;
-  border: 1px solid #999;
+  border: 1px solid var(--text-color);
   padding: 2em 2em;
   border-radius: 6px;
   margin-top: 2em;
@@ -30,7 +30,7 @@
   border: 0;
   background-color: var(--primary-clr);
   outline: none;
-  border-bottom: 2px solid #aaa;
+  border-bottom: 2px solid var(--text-color);
   padding: 0.7em 1em;
   flex-basis: 75%;
 }
@@ -53,7 +53,7 @@
 }
 
 ::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+  filter: invert(0.6);
 }
 
 .form-control label {

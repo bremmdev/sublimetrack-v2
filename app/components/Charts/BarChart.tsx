@@ -11,6 +11,9 @@ import {
   Tooltip,
   Title,
 } from "chart.js";
+import { ThemeContext, type ThemeType } from "../../root";
+import { useContext } from "react";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,32 +25,6 @@ ChartJS.register(
 
 type Props = {
   expenses: ExpenseWithCategory[];
-};
-
-//options for chart
-const options = {
-  borderRadius: 3,
-  plugins: {
-    legend: {
-      labels: {
-        color: "white",
-        padding: 8,
-        boxWidth: 10,
-        usePointStyle: true,
-        font: { size: 13 },
-      },
-    },
-  },
-  scales: {
-    y: {
-      ticks: { color: "white", beginAtZero: true },
-      grid: { color: "#666" },
-    },
-    x: {
-      ticks: { color: "white" },
-      grid: { color: "#666" },
-    },
-  },
 };
 
 const getExpensesPerMonth = (expenses: ExpenseWithCategory[]): number[] => {
@@ -64,8 +41,36 @@ const getExpensesPerMonth = (expenses: ExpenseWithCategory[]): number[] => {
 const BarChart = (props: Props) => {
   const { expenses } = props;
 
+  const { theme } = useContext(ThemeContext) as ThemeType;
+
   const expensesPerMonth = getExpensesPerMonth(expenses);
 
+  const selectedThemeColor = theme === 'dark' ? "white" : 'black'
+  //options for chart
+  const options = {
+    borderRadius: 3,
+    plugins: {
+      legend: {
+        labels: {
+          color: selectedThemeColor,
+          padding: 8,
+          boxWidth: 10,
+          usePointStyle: true,
+          font: { size: 13 },
+        },
+      },
+    },
+    scales: {
+      y: {
+        ticks: { color: selectedThemeColor, beginAtZero: true },
+        grid: { color: "#666" },
+      },
+      x: {
+        ticks: { color: selectedThemeColor },
+        grid: { color: "#666" },
+      },
+    },
+  };
   //data for donut chart
   const data = {
     labels: [
@@ -86,7 +91,7 @@ const BarChart = (props: Props) => {
       {
         label: "Expenses per month",
         data: expensesPerMonth,
-        backgroundColor: "#00ccff",
+        backgroundColor: theme === 'dark' ? "#00CCFF" : '#045ffe',
       },
     ],
   };
