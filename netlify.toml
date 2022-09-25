@@ -4,7 +4,7 @@
 
 [dev]
   command = "remix watch"
-  port = 3000
+  port = 3002
 
 [[redirects]]
   from = "/*"

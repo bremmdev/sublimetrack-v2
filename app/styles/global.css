@@ -2,10 +2,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Source+Code+Pro:ital,wght@0,400;0,500;0,600;1,600&display=swap");
 
 :root {
-  --primary-clr: #d2e2ff;
-  --secondary-clr: #e6f0ff;
-  --accent-clr: #045ffe;
-  --text-color: #00030b;
+  --primary-clr: #d4e3fd;
+  --secondary-clr: #f1f6ff;
+  --accent-clr: #2671f4;
+  --text-color: #030f2c;
   --error-clr: #ff5555;
 }
 
@@ -215,25 +215,27 @@ fieldset {
 
 .theme-toggle {
   position: absolute;
-  top: 2em;
+  top: 1em;
   right: 2em;
-  gap:0.5em;
+  gap: 0.5em;
   border-radius: 1em;
   background-color: var(--primary-clr);
-  padding:0.5em 1em;
+  padding: 0.5em 1em;
 }
 
-.theme-icon{
+.theme-icon {
   cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 /*sun icon highlighted on light mode*/
-.light .theme-icon:first-of-type{
+.light .theme-icon:first-of-type {
   color: var(--accent-clr);
 }
 
 /*moom icon highlighted on dark mode*/
-.dark .theme-icon:last-of-type{
+.dark .theme-icon:last-of-type {
   color: var(--accent-clr);
 }
 
