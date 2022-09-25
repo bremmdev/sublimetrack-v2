@@ -8,7 +8,7 @@ import {
   Form,
   useActionData,
   useTransition,
-  useLoaderData
+  useLoaderData,
 } from "@remix-run/react";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
@@ -36,12 +36,19 @@ type ActionData = {
 
 //VALIDATION FUNCTIONS
 const validateStartDate = (date: Date, latestBudgetDate?: Date) => {
-  if(!latestBudgetDate){
-    return date.getDate() === 1 ? null : 'Date must be the first day of the month'
+  if (!latestBudgetDate) {
+    return date.getDate() === 1
+      ? null
+      : "Date must be the first day of the month";
   }
-  return (date.getDate() === 1 &&  date > latestBudgetDate) ? null : 'Date must be the first day of a future month'
-}
-const validateAmount = (amount: number) => amount >= 0 && amount < 1000000 ? null : "Amount must be between 0 and 1000000";
+  return date.getDate() === 1 && date > latestBudgetDate
+    ? null
+    : "Date must be the first day of a future month";
+};
+const validateAmount = (amount: number) =>
+  amount >= 0 && amount < 1000000
+    ? null
+    : "Amount must be between 0 and 1000000";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData();
@@ -63,7 +70,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const error = {
     startDate: validateStartDate(new Date(startDate), latestBudgetStartDate),
-    amount: validateAmount(+amount)
+    amount: validateAmount(+amount),
   };
 
   //check if any of the fields is invalid
@@ -101,36 +108,55 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const budgets = await getBudgetsByUserId("70e0cff2-7589-4de8-9f2f-4e372a5a15f3")
-  if(!budgets){
-    throw new Response("Loading form failed", { status: 404})
+  const budgets = await getBudgetsByUserId(
+    "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
+  );
+  if (!budgets) {
+    throw new Response("Loading form failed", { status: 404 });
   }
   //check for an existing future budget, needed for warning message to user
-  const futureBudget = budgets.find(budget => new Date(budget.startDate) > new Date())
-  return futureBudget ? true : false
+  const futureBudget = budgets.find(
+    (budget) => new Date(budget.startDate) > new Date()
+  );
+  return futureBudget ? true : false;
 };
 
 export default function NewBudgetRoute() {
   const actionData = useActionData() as ActionData;
-  const hasFutureBudget:boolean = useLoaderData()
+  const hasFutureBudget: boolean = useLoaderData();
   const transition = useTransition();
 
-  const isAdding = transition?.submission?.formData.get('_action') === 'create';
+  const isAdding = transition?.submission?.formData.get("_action") === "create";
 
   //calculate the first day of next month as default
-  const currDate = new Date()
-  const firstDayNextMonth =  new Date(currDate.getFullYear(), currDate.getMonth() + 1, 1).toLocaleDateString()
-  let [month, day, year] = firstDayNextMonth.split('/')
-  const defaultStartDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  const currDate = new Date();
+  const firstDayNextMonth = new Date(
+    currDate.getFullYear(),
+    currDate.getMonth() + 1,
+    1
+  ).toLocaleDateString();
+  let [month, day, year] = firstDayNextMonth.split("/");
+  //add pending 0 if month does not have 2 digits
+  month = month.length === 2 ? month : `0${month}`;
+  const defaultStartDate = `${year}-${month}-0${day}`;
 
   return (
     <div className="form-wrapper">
-      {hasFutureBudget && <p className='error centered'>There is already a future budget. Delete it before creating a new one.</p>}
+      {hasFutureBudget && (
+        <p className="error centered">
+          There is already a future budget. Delete it before creating a new one.
+        </p>
+      )}
       <Form method="post" className="form">
         <fieldset disabled={isAdding}>
           <div className="form-control">
             <label htmlFor="startDate">Start date</label>
-            <input type="date" id="startDate" name="startDate" defaultValue={defaultStartDate}/>
+            <input
+              type="date"
+              id="startDate"
+              name="startDate"
+              defaultValue={defaultStartDate}
+            />
           </div>
           {actionData?.error.startDate && (
             <div className="error">{actionData.error.startDate}</div>
@@ -150,7 +176,11 @@ export default function NewBudgetRoute() {
             <div className="error">{actionData.error.amount}</div>
           )}
         </fieldset>
-        <FormActions redirectTo="/budgets" isAdding={isAdding} shouldDisableSubmit={isAdding || hasFutureBudget}/>
+        <FormActions
+          redirectTo="/budgets"
+          isAdding={isAdding}
+          shouldDisableSubmit={isAdding || hasFutureBudget}
+        />
       </Form>
     </div>
   );
