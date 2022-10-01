@@ -4,7 +4,7 @@
 :root {
   --primary-clr: #d4e3fd;
   --secondary-clr: #f1f6ff;
-  --accent-clr: #2671f4;
+  --accent-clr: #005eff;
   --text-color: #030f2c;
   --error-clr: #ff5555;
 }
@@ -64,6 +64,10 @@ body {
 .logo {
   width: 4rem;
   height: 4rem;
+}
+
+.light .logo{
+  filter: invert(100%) hue-rotate(215deg);
 }
 
 .title-highlight {

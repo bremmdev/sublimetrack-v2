@@ -2,7 +2,7 @@ import React from "react";
 import { type ExpenseWithCategory } from "~/models/expense.server";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Legend } from "chart.js";
-import { ThemeContext, type ThemeType } from "../../root";
+import { useTheme } from "../../utils/theme-context"
 import { useContext } from "react";
 
 type Props = {
@@ -48,7 +48,7 @@ const getExpensesPerCategory = (
 const DoughnutChart = (props: Props) => {
   const { expenses } = props;
 
-  const { theme } = useContext(ThemeContext) as ThemeType;
+  const [theme] = useTheme()
 
   const { categories, categoryColors } = getDataFromExpenses(expenses);
   const expensesPerCategory = getExpensesPerCategory(expenses, categories);

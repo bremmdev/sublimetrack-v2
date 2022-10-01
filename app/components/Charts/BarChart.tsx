@@ -11,8 +11,7 @@ import {
   Tooltip,
   Title,
 } from "chart.js";
-import { ThemeContext, type ThemeType } from "../../root";
-import { useContext } from "react";
+import { useTheme } from "../../utils/theme-context"
 
 ChartJS.register(
   CategoryScale,
@@ -41,7 +40,7 @@ const getExpensesPerMonth = (expenses: ExpenseWithCategory[]): number[] => {
 const BarChart = (props: Props) => {
   const { expenses } = props;
 
-  const { theme } = useContext(ThemeContext) as ThemeType;
+  const [theme] = useTheme();
 
   const expensesPerMonth = getExpensesPerMonth(expenses);
 

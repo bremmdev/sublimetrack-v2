@@ -88,7 +88,7 @@ export default function IndexRoute() {
   let expensesContent: React.ReactElement = <p>Loading...</p>;
 
   if (expenses.length === 0) {
-    expensesContent = <p className="my-1">There are currently no expenses.</p>;
+    expensesContent = <p className="my-1">There are no expenses this month.</p>;
   }
 
   if (expenses && expenses.length > 0) {
@@ -155,7 +155,7 @@ export default function IndexRoute() {
         </section>
         <section className="flex-column centered justify-center">
           <h3>Expenses per category</h3>
-          {expenses.length === 0 ? <p className="my-1">There are currently no expenses.</p> : <DoughnutChart expenses={expenses} /> }
+          {expenses.length === 0 ? <p className="my-1">There are no expenses this month.</p> : <DoughnutChart expenses={expenses} /> }
         </section>
       </div>
     </>
