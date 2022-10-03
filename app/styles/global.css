@@ -236,11 +236,13 @@ fieldset {
 /*sun icon highlighted on light mode*/
 .light .theme-icon:first-of-type {
   color: var(--accent-clr);
+  transition: color 0.3s ease-in;
 }
 
 /*moom icon highlighted on dark mode*/
 .dark .theme-icon:last-of-type {
   color: var(--accent-clr);
+  transition: color 0.3s ease-in;
 }
 
 /* LOADING SPINNER */

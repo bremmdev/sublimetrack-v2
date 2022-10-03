@@ -71,8 +71,8 @@ const clientThemeCode = `
 })();
 `;
 
-function NonFlashOfWrongThemeEls() {
+function AddThemeBeforeHydration() {
   return <script dangerouslySetInnerHTML={{ __html: clientThemeCode }} />;
 }
 
-export { NonFlashOfWrongThemeEls, Theme, ThemeProvider, useTheme };
+export { AddThemeBeforeHydration, Theme, ThemeProvider, useTheme };

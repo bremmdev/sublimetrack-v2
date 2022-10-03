@@ -21,7 +21,7 @@ import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import logoUrl from "./assets/logo.svg";
 import ThemeToggle from "./components/UI/ThemeToggle";
-import { ThemeProvider, useTheme, NonFlashOfWrongThemeEls } from '~/utils/theme-context'
+import { ThemeProvider, useTheme, AddThemeBeforeHydration } from '~/utils/theme-context'
 import clsx from 'clsx';
 
 type Props = {
@@ -66,7 +66,7 @@ function Document({ children }: Props) {
       <head>
         <Meta />
         <Links />
-        <NonFlashOfWrongThemeEls />
+        <AddThemeBeforeHydration />
       </head>
       <body>
         {children}
