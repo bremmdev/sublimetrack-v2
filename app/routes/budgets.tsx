@@ -3,12 +3,7 @@ import {
   type LoaderFunction,
   type ActionFunction,
 } from "@remix-run/node";
-import {
-  useLoaderData,
-  Outlet,
-  useTransition,
-  Link,
-} from "@remix-run/react";
+import { useLoaderData, Outlet, useTransition, Link } from "@remix-run/react";
 import {
   getBudgetsByUserId,
   deleteBudget,
@@ -39,26 +34,27 @@ export const action: ActionFunction = async ({ request }) => {
     const budgetId = formData.get("budget_id");
     invariant(typeof budgetId === "string", "Budget not found!");
 
+    const budgets = await getBudgetsByUserId(
+      "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
+    );
+
     try {
-      const deletedBudget = await deleteBudget(budgetId);
-
-      if (!deletedBudget) {
-        throw new Error(`Deleting budget ${budgetId} failed`);
-      }
-
-      const budgets = await getBudgetsByUserId(
-        "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
-      );
-
-      //remove the endDate from current budget
-      await prisma.budget.update({
-        where: {
-          id: budgets[0].id,
-        },
-        data: {
-          endDate: null,
-        },
-      });
+      //delete the second budget, since the first budget is the budget that has a pending delete on it because of the transaction
+      await prisma.$transaction([
+        prisma.budget.update({
+          where: {
+            id: budgets[1].id,
+          },
+          data: {
+            endDate: null,
+          },
+        }),
+        prisma.budget.delete({
+          where: {
+            id: budgetId,
+          },
+        }),
+      ]);
     } catch (e) {
       return json({ error: "Deleting budget failed" });
     }

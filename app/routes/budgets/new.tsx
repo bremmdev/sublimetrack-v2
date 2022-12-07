@@ -81,20 +81,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     return json<ActionData>({ error, values }, { status: 400 });
   }
 
-  //put startDate of new budget as endDate on current budget
-  //only do this if there are already budgets
-  if (budgets.length > 0) {
-    await prisma.budget.update({
-      where: {
-        id: budgets[0].id,
-      },
-      data: {
-        endDate: new Date(startDate),
-      },
-    });
-  }
-
-  //no errors so add budget
+  //create new budget
   const budget = {
     id: uuid(),
     startDate: new Date(startDate),
@@ -102,7 +89,30 @@ export const action: ActionFunction = async ({ request, params }) => {
     amount: new Prisma.Decimal(amount),
     userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3",
   };
-  await createBudget(budget);
+
+  //put startDate of new budget as endDate on current budget
+  //only do this if there are already budgets
+  try {
+    if (budgets.length > 0) {
+      await prisma.$transaction([
+        prisma.budget.update({
+          where: {
+            id: budgets[0].id,
+          },
+          data: {
+            endDate: new Date(startDate),
+          },
+        }),
+        prisma.budget.create({
+          data: budget,
+        }),
+      ]);
+    } else {
+      await createBudget(budget);
+    }
+  } catch (e) {
+    throw new Error("transaction failed");
+  }
 
   return redirect("/budgets");
 };
