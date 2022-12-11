@@ -21,8 +21,12 @@ import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import logoUrl from "./assets/logo.svg";
 import ThemeToggle from "./components/UI/ThemeToggle";
-import { ThemeProvider, useTheme, AddThemeBeforeHydration } from '~/utils/theme-context'
-import clsx from 'clsx';
+import {
+  ThemeProvider,
+  useTheme,
+  AddThemeBeforeHydration,
+} from "~/utils/theme-context";
+import clsx from "clsx";
 
 type Props = {
   children?: React.ReactNode;
@@ -38,7 +42,6 @@ export const meta: MetaFunction = () => ({
   title: "Sublimetrack",
   viewport: "width=device-width,initial-scale=1",
 });
-
 
 export default function AppWithThemeProvider() {
   return (
@@ -78,7 +81,7 @@ function Document({ children }: Props) {
 }
 
 function Layout({ children }: Props) {
-  const [theme, setTheme] = useTheme()
+  const [theme, setTheme] = useTheme();
 
   return (
     <div className="page-container flex">
@@ -123,11 +126,7 @@ function NavPanel() {
   return (
     <div className="nav-panel flex-column align-center py-3">
       <div className="logo-container flex-column align-center">
-        <img
-          className="logo"
-          src={logoUrl}
-          alt="Sublimetrack Logo"
-        />
+        <img className="logo" src={logoUrl} alt="Sublimetrack Logo" />
         <h1 className="hidden-mobile">
           sublime<span className="title-highlight">track</span>
         </h1>
@@ -157,14 +156,16 @@ function NavPanel() {
 //for unexpected errors
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   return (
-    <Document>
-      <Layout>
-        <div className="error-boundary flex-column align-center justify-center">
-          <h1>Oops...something went wrong</h1>
-          <p className="my-1">{error.message}</p>
-        </div>
-      </Layout>
-    </Document>
+    <ThemeProvider>
+      <Document>
+        <Layout>
+          <div className="error-boundary flex-column align-center justify-center">
+            <h1>Oops...something went wrong</h1>
+            <p className="my-1">{error.message}</p>
+          </div>
+        </Layout>
+      </Document>
+    </ThemeProvider>
   );
 };
 
@@ -176,16 +177,18 @@ export function CatchBoundary() {
   const errorMessage = caught.data ?? "Page not found";
 
   return (
-    <Document>
-      <Layout>
-        <div className="catch-boundary flex-column align-center justify-center">
-          <h1>{caught.status}</h1>
-          <p>{errorMessage}</p>
-          <Link to="/" className="btn btn-primary my-2">
-            Home Page
-          </Link>
-        </div>
-      </Layout>
-    </Document>
+    <ThemeProvider>
+      <Document>
+        <Layout>
+          <div className="catch-boundary flex-column align-center justify-center">
+            <h1>{caught.status}</h1>
+            <p>{errorMessage}</p>
+            <Link to="/" className="btn btn-primary my-2">
+              Home Page
+            </Link>
+          </div>
+        </Layout>
+      </Document>
+    </ThemeProvider>
   );
 }
