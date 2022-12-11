@@ -1,9 +1,7 @@
-import React from "react";
 import { type ExpenseWithCategory } from "~/models/expense.server";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Legend } from "chart.js";
 import { useTheme } from "../../utils/theme-context"
-import { useContext } from "react";
 
 type Props = {
   expenses: ExpenseWithCategory[];

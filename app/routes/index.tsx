@@ -1,13 +1,8 @@
 import { json, type LoaderFunction } from "@remix-run/node";
 import { useLoaderData, Link, useTransition } from "@remix-run/react";
-import { getUserById } from "~/models/user.server";
 import { getCurrDate } from "~/models/date.server";
 import { getCurrentBudget } from "~/models/budget.server";
-import {
-  getExpenses,
-  getExpensesForCurrentMonth,
-  type ExpenseWithCategory,
-} from "~/models/expense.server";
+import { type ExpenseWithCategory } from "~/models/expense.server";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
 import overviewStyles from "~/styles/overview.css";
@@ -18,6 +13,7 @@ import React from "react";
 import ExpenseItem from "~/components/Expenses/ExpenseItem";
 import ProgressBar from "~/components/Overview/ProgressBar";
 import DoughnutChart from "~/components/Charts/DoughnutChart";
+import { prisma } from "~/db.server";
 
 export const links = () => [
   { href: globalStyles, rel: "stylesheet" },
@@ -25,7 +21,7 @@ export const links = () => [
   { href: overviewStyles, rel: "stylesheet" },
   { href: expenseStyles, rel: "stylesheet" },
   { href: progressbarStyles, rel: "stylesheet" },
-  { href: chartStyles, rel: "stylesheet" }
+  { href: chartStyles, rel: "stylesheet" },
 ];
 
 type LoaderData = {
@@ -36,39 +32,55 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async () => {
-  const user = await getUserById("70e0cff2-7589-4de8-9f2f-4e372a5a15f3");
-
-  if (!user) {
-    throw new Response("User not found", { status: 404 });
-  }
   const { currDate, startOfMonth, endOfMonth } = getCurrDate();
 
-  const currentBudget = getCurrentBudget(user.Budget, currDate);
+  try {
+    //only include the expenses for the current month
+    const userWithBudgetsAndExpenses = await prisma.user.findUnique({
+      where: {
+        id: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3",
+      },
+      include: {
+        Budget: true,
+        Expense: {
+          where: {
+            date: {
+              gte: startOfMonth,
+              lt: endOfMonth,
+            },
+          },
+          include: {
+            Category: true,
+          },
+        },
+      },
+    });
 
-  const expensesFilter = {
-    userId: "70e0cff2-7589-4de8-9f2f-4e372a5a15f3",
-    date: {
-      gte: startOfMonth,
-    },
-  };
+    if (!userWithBudgetsAndExpenses) {
+      throw new Response("User not found", { status: 404 });
+    }
 
-  const expenses = await getExpenses(expensesFilter);
+    //get the budget for the current month based on today's date
+    const currentBudget = getCurrentBudget(
+      userWithBudgetsAndExpenses.Budget,
+      currDate
+    );
 
-  if (!expenses) {
-    throw new Response("Expenses not found", { status: 404 });
+    //calculate the total expense amount for this month's expenses
+    const expenseAmount = userWithBudgetsAndExpenses.Expense.reduce(
+      (sum, expense) => sum + +expense.amount,
+      0
+    );
+
+    return json<LoaderData>({
+      firstName: userWithBudgetsAndExpenses.firstName,
+      currentBudget: +(currentBudget?.amount || 0),
+      expenses: userWithBudgetsAndExpenses.Expense,
+      expenseAmount,
+    });
+  } catch (e) {
+    throw new Response("Fetching user data failed", { status: 404 });
   }
-
-  const { expensesCurrentMonth, expenseAmount } = getExpensesForCurrentMonth(
-    expenses,
-    endOfMonth
-  );
-
-  return json<LoaderData>({
-    firstName: user.firstName,
-    currentBudget: +(currentBudget?.amount || 0),
-    expenses: expensesCurrentMonth,
-    expenseAmount,
-  });
 };
 
 export default function IndexRoute() {
@@ -155,7 +167,11 @@ export default function IndexRoute() {
         </section>
         <section className="flex-column centered justify-center">
           <h3>Expenses per category</h3>
-          {expenses.length === 0 ? <p className="my-1">There are no expenses this month.</p> : <DoughnutChart expenses={expenses} /> }
+          {expenses.length === 0 ? (
+            <p className="my-1">There are no expenses this month.</p>
+          ) : (
+            <DoughnutChart expenses={expenses} />
+          )}
         </section>
       </div>
     </>
