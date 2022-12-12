@@ -19,6 +19,8 @@ import { IoStatsChart, IoWalletOutline } from "react-icons/io5";
 import { MdViewList, MdOutlineWindow } from "react-icons/md";
 import globalStyles from "~/styles/global.css";
 import utilStyles from "~/styles/utils.css";
+import expenseStyles from "~/styles/expenses.css";
+import chartStyles from "~/styles/charts.css";
 import logoUrl from "./assets/logo.svg";
 import ThemeToggle from "./components/UI/ThemeToggle";
 import {
@@ -35,6 +37,8 @@ type Props = {
 export const links: LinksFunction = () => [
   { href: globalStyles, rel: "stylesheet" },
   { href: utilStyles, rel: "stylesheet" },
+  { href: expenseStyles, rel: "stylesheet" },
+  { href: chartStyles, rel: "stylesheet" },
 ];
 
 export const meta: MetaFunction = () => ({

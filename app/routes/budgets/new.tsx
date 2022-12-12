@@ -1,8 +1,8 @@
 import {
-  type ActionFunction,
   json,
   type LoaderFunction,
   redirect,
+  type ActionArgs,
 } from "@remix-run/node";
 import {
   Form,
@@ -10,8 +10,6 @@ import {
   useTransition,
   useLoaderData,
 } from "@remix-run/react";
-import globalStyles from "~/styles/global.css";
-import utilStyles from "~/styles/utils.css";
 import formStyles from "~/styles/form.css";
 import { v4 as uuid } from "uuid";
 import { getBudgetsByUserId, createBudget } from "~/models/budget.server";
@@ -20,19 +18,11 @@ import { prisma } from "~/db.server";
 import FormActions from "~/components/Forms/FormActions";
 
 export const links = () => [
-  { href: globalStyles, rel: "stylesheet" },
-  { href: utilStyles, rel: "stylesheet" },
   { href: formStyles, rel: "stylesheet" },
 ];
 
 /* TYPE DEFS */
 type FormValues = Record<string, string>;
-type ErrorObj = Record<string, string | null>;
-
-type ActionData = {
-  error: ErrorObj;
-  values: FormValues;
-};
 
 //VALIDATION FUNCTIONS
 const validateStartDate = (date: Date, latestBudgetDate?: Date) => {
@@ -50,9 +40,9 @@ const validateAmount = (amount: number) =>
     ? null
     : "Amount must be between 0 and 1000000";
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const formData = await request.formData();
-  const values = Object.fromEntries(formData) as FormValues;
+  const values: FormValues = Object.fromEntries(formData) as FormValues;
 
   const { startDate, amount } = values;
 
@@ -78,7 +68,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   //send filled in user values back to client along with the errors
   if (hasError) {
-    return json<ActionData>({ error, values }, { status: 400 });
+    return json({ error, values }, { status: 400 });
   }
 
   //create new budget
@@ -111,7 +101,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       await createBudget(budget);
     }
   } catch (e) {
-    throw new Error("transaction failed");
+    throw new Error("creating budget failed");
   }
 
   return redirect("/budgets");
@@ -132,7 +122,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function NewBudgetRoute() {
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData<typeof action>();
   const hasFutureBudget: boolean = useLoaderData();
   const transition = useTransition();
 

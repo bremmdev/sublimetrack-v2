@@ -11,8 +11,6 @@ import {
   useActionData,
   Link,
 } from "@remix-run/react";
-import globalStyles from "~/styles/global.css";
-import utilStyles from "~/styles/utils.css";
 import categoryStyles from "~/styles/categories.css";
 import {
   getCategoriesByUserId,
@@ -24,8 +22,6 @@ import CategoryTag from "~/components/Categories/CategoryTag";
 import invariant from "tiny-invariant";
 
 export const links = () => [
-  { href: globalStyles, rel: "stylesheet" },
-  { href: utilStyles, rel: "stylesheet" },
   { href: categoryStyles, rel: "stylesheet" },
 ];
 

@@ -6,19 +6,14 @@ import {
 import { useLoaderData, Outlet, useTransition, Link } from "@remix-run/react";
 import {
   getBudgetsByUserId,
-  deleteBudget,
   type Budget,
 } from "~/models/budget.server";
-import globalStyles from "~/styles/global.css";
-import utilStyles from "~/styles/utils.css";
 import budgetStyles from "~/styles/budgets.css";
 import BudgetItem from "~/components/Budgets/BudgetItem";
 import invariant from "tiny-invariant";
 import { prisma } from "~/db.server";
 
 export const links = () => [
-  { href: globalStyles, rel: "stylesheet" },
-  { href: utilStyles, rel: "stylesheet" },
   { href: budgetStyles, rel: "stylesheet" },
 ];
 

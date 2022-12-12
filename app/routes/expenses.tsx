@@ -12,9 +12,6 @@ import {
   useLocation,
   useTransition
 } from "@remix-run/react";
-import globalStyles from "~/styles/global.css";
-import utilStyles from "~/styles/utils.css";
-import expenseStyles from "~/styles/expenses.css";
 import {
   deleteExpense,
   getExpenses,
@@ -28,12 +25,6 @@ import { Prisma } from "@prisma/client";
 import { useState, useRef } from "react";
 import { getCategoriesByUserId, type Category } from "~/models/category.server";
 import { getCurrDate } from "~/models/date.server";
-
-export const links = () => [
-  { href: globalStyles, rel: "stylesheet" },
-  { href: utilStyles, rel: "stylesheet" },
-  { href: expenseStyles, rel: "stylesheet" },
-];
 
 type LoaderData = {
   expenses: ExpenseWithCategory[];

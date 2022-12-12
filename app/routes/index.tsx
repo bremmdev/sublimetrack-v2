@@ -3,12 +3,8 @@ import { useLoaderData, Link, useTransition } from "@remix-run/react";
 import { getCurrDate } from "~/models/date.server";
 import { getCurrentBudget } from "~/models/budget.server";
 import { type ExpenseWithCategory } from "~/models/expense.server";
-import globalStyles from "~/styles/global.css";
-import utilStyles from "~/styles/utils.css";
 import overviewStyles from "~/styles/overview.css";
-import expenseStyles from "~/styles/expenses.css";
 import progressbarStyles from "~/styles/progressbar.css";
-import chartStyles from "~/styles/charts.css";
 import React from "react";
 import ExpenseItem from "~/components/Expenses/ExpenseItem";
 import ProgressBar from "~/components/Overview/ProgressBar";
@@ -16,12 +12,8 @@ import DoughnutChart from "~/components/Charts/DoughnutChart";
 import { prisma } from "~/db.server";
 
 export const links = () => [
-  { href: globalStyles, rel: "stylesheet" },
-  { href: utilStyles, rel: "stylesheet" },
   { href: overviewStyles, rel: "stylesheet" },
-  { href: expenseStyles, rel: "stylesheet" },
   { href: progressbarStyles, rel: "stylesheet" },
-  { href: chartStyles, rel: "stylesheet" },
 ];
 
 type LoaderData = {

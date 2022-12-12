@@ -10,8 +10,6 @@ import {
   useActionData,
   useTransition,
 } from "@remix-run/react";
-import globalStyles from "~/styles/global.css";
-import utilStyles from "~/styles/utils.css";
 import formStyles from "~/styles/form.css";
 import { createExpense } from "~/models/expense.server";
 import { v4 as uuid } from "uuid";
@@ -20,8 +18,6 @@ import { getCategoriesByUserId, type Category } from "~/models/category.server";
 import FormActions from "~/components/Forms/FormActions";
 
 export const links = () => [
-  { href: globalStyles, rel: "stylesheet" },
-  { href: utilStyles, rel: "stylesheet" },
   { href: formStyles, rel: "stylesheet" },
 ];
 
