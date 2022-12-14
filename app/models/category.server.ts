@@ -4,8 +4,6 @@ import type { Prisma } from "@prisma/client";
 
 export type Category = Prisma.CategoryGetPayload<{}>;
 
-export type PrismaError = Prisma.PrismaClientKnownRequestError
-
 export async function getCategoriesByUserId(userId: string) {
   return await prisma.category.findMany({
     where: {

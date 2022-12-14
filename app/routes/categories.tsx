@@ -1,7 +1,7 @@
 import {
   type ActionFunction,
-  json,
   type LoaderFunction,
+  json,
   redirect,
 } from "@remix-run/node";
 import {
@@ -16,14 +16,12 @@ import {
   getCategoriesByUserId,
   deleteCategory,
   type Category,
-  type PrismaError,
 } from "~/models/category.server";
 import CategoryTag from "~/components/Categories/CategoryTag";
 import invariant from "tiny-invariant";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
-export const links = () => [
-  { href: categoryStyles, rel: "stylesheet" },
-];
+export const links = () => [{ href: categoryStyles, rel: "stylesheet" }];
 
 type LoaderData = {
   categories: Category[];
@@ -51,9 +49,10 @@ export const action: ActionFunction = async ({ request }) => {
       }
     } catch (e) {
       let errorMessage: string = "";
-
-      if ((e as PrismaError).code === "P2003") {
-        errorMessage = `Deletion failed. There are expenses for category '${categoryName}'. Please delete these first.`;
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === "P2003") {
+          errorMessage = `Deletion failed. There are expenses for category '${categoryName}'. Please delete these first.`;
+        }
       } else {
         errorMessage = `Deleting category '${categoryName}' failed`;
       }
@@ -68,16 +67,16 @@ export const action: ActionFunction = async ({ request }) => {
   return null;
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const categories = await getCategoriesByUserId(
-    "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
-  );
+export const loader: LoaderFunction = async () => {
+  try {
+    const categories = await getCategoriesByUserId(
+      "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
+    );
 
-  if (!categories) {
-    throw new Response("Categories not found", { status: 404 });
+    return json<LoaderData>({ categories });
+  } catch (e) {
+    throw new Response("Fetching categories failed", { status: 404 });
   }
-
-  return json<LoaderData>({ categories });
 };
 
 export default function CategoriesRoute() {
