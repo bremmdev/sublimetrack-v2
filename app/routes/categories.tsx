@@ -19,7 +19,7 @@ import {
 } from "~/models/category.server";
 import CategoryTag from "~/components/Categories/CategoryTag";
 import invariant from "tiny-invariant";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const links = () => [{ href: categoryStyles, rel: "stylesheet" }];
 

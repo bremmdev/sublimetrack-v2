@@ -5,6 +5,7 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, Outlet, useTransition, Link } from "@remix-run/react";
 import {
+  deleteBudget,
   getBudgetsByUserId,
   type Budget,
 } from "~/models/budget.server";
@@ -33,23 +34,33 @@ export const action: ActionFunction = async ({ request }) => {
       "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
     );
 
+    const deletedBudgetIndex = budgets.findIndex(
+      (budget) => budget.id === budgetId
+    );
+
+    const isOldestBudget = deletedBudgetIndex === budgets.length - 1
+
     try {
-      //delete the second budget, since the first budget is the budget that has a pending delete on it because of the transaction
-      await prisma.$transaction([
-        prisma.budget.update({
-          where: {
-            id: budgets[1].id,
-          },
-          data: {
-            endDate: null,
-          },
-        }),
-        prisma.budget.delete({
-          where: {
-            id: budgetId,
-          },
-        }),
-      ]);
+      //if we delete a budget, set the endDate of the next budget to the endDate of the deletedBudget | null
+      if (!isOldestBudget) {
+        await prisma.$transaction([
+          prisma.budget.update({
+            where: {
+              id: budgets[deletedBudgetIndex + 1].id,
+            },
+            data: {
+              endDate: budgets[deletedBudgetIndex].endDate,
+            },
+          }),
+          prisma.budget.delete({
+            where: {
+              id: budgetId,
+            },
+          }),
+        ]);
+      } else {
+        await deleteBudget(budgetId);
+      }
     } catch (e) {
       return json({ error: "Deleting budget failed" });
     }
