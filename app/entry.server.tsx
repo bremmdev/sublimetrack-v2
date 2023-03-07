@@ -1,6 +1,6 @@
 import { PassThrough } from "stream";
 import type { EntryContext } from "@remix-run/node";
-import { Response } from "@remix-run/node";
+import { Response, type Request } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
@@ -109,3 +109,26 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
+
+//set cache control headers for prefetch requests
+export const handleDataRequest = async (
+  response: Response,
+  // same args that get passed to the action or loader that was called
+  { request }: { request: Request }
+) => {
+  const isGet = request.method.toLowerCase() === "get";
+  let purpose =
+    request.headers.get("Purpose") ||
+    request.headers.get("X-Purpose") ||
+    request.headers.get("Sec-Purpose") ||
+    request.headers.get("Sec-Fetch-Purpose") ||
+    request.headers.get("X-Moz");
+  const isPrefetch = purpose === "prefetch";
+
+  //if it is a GET request and a prefetch request and it doesn't have cache control headers, set them
+  if (isGet && isPrefetch && !response.headers.has("Cache-Control")) {
+    //cache for 10 seconds on the client
+    response.headers.set("Cache-Control", "private, max-age=10");
+  }
+  return response;
+};
