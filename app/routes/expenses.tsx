@@ -2,6 +2,7 @@ import {
   type ActionFunction,
   json,
   type LoaderFunction,
+  type LinksFunction
 } from "@remix-run/node";
 import {
   useLoaderData,
@@ -25,6 +26,11 @@ import { Prisma } from "@prisma/client";
 import { useState, useRef } from "react";
 import { getCategoriesByUserId, type Category } from "~/models/category.server";
 import { getCurrDate } from "~/models/date.server";
+import expenseStyles from "~/styles/expenses.css";
+
+export const links: LinksFunction = () => [
+  { href: expenseStyles, rel: "stylesheet" },
+];
 
 type LoaderData = {
   expenses: ExpenseWithCategory[];

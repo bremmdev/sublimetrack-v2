@@ -67,13 +67,24 @@ export const action: ActionFunction = async ({ request }) => {
   return null;
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  let headers = new Headers();
+  let purpose =
+    request.headers.get("Purpose") ||
+    request.headers.get("X-Purpose") ||
+    request.headers.get("Sec-Purpose") ||
+    request.headers.get("Sec-Fetch-Purpose") ||
+    request.headers.get("X-Moz");
+
+  if (purpose === "prefetch") {
+    headers.set("Cache-Control", "private, max-age=10");
+  }
   try {
     const categories = await getCategoriesByUserId(
       "70e0cff2-7589-4de8-9f2f-4e372a5a15f3"
     );
 
-    return json<LoaderData>({ categories });
+    return json<LoaderData>({ categories }, { headers });
   } catch (e) {
     throw new Response("Fetching categories failed", { status: 404 });
   }

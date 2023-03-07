@@ -6,6 +6,7 @@ import {
 } from "@remix-run/react";
 import { type LoaderFunction, json } from "@remix-run/node";
 import insightStyles from "~/styles/insights.css";
+import chartStyles from "~/styles/charts.css";
 import { getExpenses, type ExpenseWithCategory } from "~/models/expense.server";
 import DoughnutChart from "~/components/Charts/DoughnutChart";
 import BarChart from "~/components/Charts/BarChart";
@@ -13,6 +14,7 @@ import { useState } from "react";
 
 export const links = () => [
   { href: insightStyles, rel: "stylesheet" },
+  { href: chartStyles, rel: "stylesheet" },
 ];
 
 type LoaderData = {

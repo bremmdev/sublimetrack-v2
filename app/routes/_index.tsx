@@ -5,6 +5,8 @@ import { getCurrentBudget } from "~/models/budget.server";
 import { type ExpenseWithCategory } from "~/models/expense.server";
 import overviewStyles from "~/styles/overview.css";
 import progressbarStyles from "~/styles/progressbar.css";
+import expenseStyles from "~/styles/expenses.css";
+import chartStyles from "~/styles/charts.css";
 import React from "react";
 import ExpenseItem from "~/components/Expenses/ExpenseItem";
 import ProgressBar from "~/components/Overview/ProgressBar";
@@ -14,6 +16,8 @@ import { prisma } from "~/db.server";
 export const links = () => [
   { href: overviewStyles, rel: "stylesheet" },
   { href: progressbarStyles, rel: "stylesheet" },
+  { href: expenseStyles, rel: "stylesheet" },
+  { href: chartStyles, rel: "stylesheet" },
 ];
 
 type LoaderData = {
